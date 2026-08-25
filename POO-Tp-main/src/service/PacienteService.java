@@ -1,126 +1,48 @@
 package service;
 
+import entity.Paciente;
 import entity.PacienteObraSocial;
 import entity.PacienteParticular;
-import entity.Paciente;
-import repository.IRepository;
 import repository.PacienteRepository;
 
-import java.util.List;
-import java.util.Optional;
-
-public class PacienteService implements IService<Paciente> {
-
-    private IRepository<Paciente> pacienteRepository;
+public class PacienteService extends BaseService<Paciente> {
 
     public PacienteService() {
-        this.pacienteRepository = new PacienteRepository();
+        // Inicializamos enviando el repositorio al constructor de BaseService
+        super(new PacienteRepository());
     }
 
     @Override
-    public Paciente registrar(Paciente paciente) {
-        try {
-            // 1. Validaciones generales
-            if (paciente.getNombre() == null || paciente.getNombre().trim().isEmpty()) {
-                throw new DatoInvalidoException("Nombre", "El nombre del paciente es obligatorio.");
-            }
-            if (paciente.getApellido() == null || paciente.getApellido().trim().isEmpty()) {
-                throw new DatoInvalidoException("Apellido", "El apellido del paciente es obligatorio.");
-            }
-            if (paciente.getDni() == null || paciente.getDni().trim().isEmpty()) {
-                throw new DatoInvalidoException("DNI", "El DNI del paciente es obligatorio.");
-            }
+    protected String getNombreEntidad() { return "paciente"; }
 
-            // 2. Validación de Lógica de Negocio: No puede haber DNI duplicado
-            List<Paciente> pacientesExistentes = pacienteRepository.buscarTodos();
-            for (Paciente p : pacientesExistentes) {
-                if (p.getDni().equals(paciente.getDni())) {
-                    throw new ClinicaException("Ya existe un paciente registrado con el DNI: " + paciente.getDni(), "ERR_PAC_002");
-                }
-            }
+    @Override
+    protected String getCodigoErrorGenerico() { return "ERR_GEN_001"; }
 
-            // 3. Validaciones específicas de subclase
-            if (paciente instanceof PacienteObraSocial) {
-                PacienteObraSocial os = (PacienteObraSocial) paciente;
-                if (os.getNombreObraSocial() == null || os.getNombreObraSocial().trim().isEmpty()) {
-                    throw new DatoInvalidoException("Obra Social", "El nombre de la obra social es obligatorio.");
-                }
-                if (os.getNumAfiliado() == null || os.getNumAfiliado().trim().isEmpty()) {
-                    throw new DatoInvalidoException("Número Afiliado", "El número de afiliado es obligatorio.");
-                }
-            } else if (paciente instanceof PacienteParticular) {
-                PacienteParticular particular = (PacienteParticular) paciente;
-                if (particular.getTarifaBase() == null || particular.getTarifaBase() <= 0) {
-                    throw new DatoInvalidoException("Tarifa Base", "La tarifa base debe ser un monto mayor a 0.");
-                }
-            }
+    @Override
+    protected void validarReglasNegocioRegistro(Paciente paciente) {
+        Validador.validarTextoObligatorio(paciente.getNombre(), "Nombre", "El nombre es obligatorio.");
+        Validador.validarTextoObligatorio(paciente.getApellido(), "Apellido", "El apellido es obligatorio.");
+        Validador.validarTextoObligatorio(paciente.getDni(), "DNI", "El DNI es obligatorio.");
 
-            System.out.println("Validaciones superadas con éxito. Registrando paciente...");
-            return pacienteRepository.guardar(paciente);
+        // Validar DNI duplicado
+        if (repository.buscarTodos().stream().anyMatch(p -> p.getDni().equals(paciente.getDni()))) {
+            throw new ClinicaException("Ya existe un paciente con el DNI: " + paciente.getDni(), "ERR_PAC_002");
+        }
 
-        } catch (ClinicaException e) {
-            // Re-lanzamos nuestras excepciones de negocio para que la UI las capture
-            throw e; 
-        } catch (Exception e) {
-            // Captura cualquier error inesperado (NullPointerException, etc.)
-            throw new ClinicaException("Error inesperado al registrar el paciente: " + e.getMessage(), "ERR_GEN_001");
-        } finally {
-            System.out.println("[Auditoría] Finalizó el intento de registro del paciente.");
+        // Validaciones por tipo de paciente
+        if (paciente instanceof PacienteObraSocial os) {
+            Validador.validarTextoObligatorio(os.getNombreObraSocial(), "Obra Social", "El nombre de la obra social es obligatorio.");
+            Validador.validarTextoObligatorio(os.getNumAfiliado(), "Número Afiliado", "El número de afiliado es obligatorio.");
+        } else if (paciente instanceof PacienteParticular particular) {
+            Validador.validarNumeroPositivo(particular.getTarifaBase(), "Tarifa Base", "La tarifa base debe ser un monto mayor a 0.");
         }
     }
 
     @Override
-    public Optional<Paciente> buscarPorId(Long id) {
-        try {
-            if (id == null || id <= 0) {
-                throw new DatoInvalidoException("ID Paciente", "El ID provisto no es válido.");
-            }
-            return pacienteRepository.buscarPorId(id);
-        } catch (Exception e) {
-            throw new ClinicaException("Error al buscar paciente por ID: " + e.getMessage(), "ERR_GEN_002");
-        }
-    }
-
-    @Override
-    public void eliminarPorId(Long id) {
-        try {
-            Optional<Paciente> existente = pacienteRepository.buscarPorId(id);
-            if (existente.isEmpty()) {
-                throw new PacienteNoEncontradoException(id);
-            }
-            pacienteRepository.eliminar(id);
-            System.out.println("Paciente eliminado correctamente.");
-        } catch (ClinicaException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ClinicaException("Error al eliminar el paciente: " + e.getMessage(), "ERR_GEN_003");
-        }
-    }
-
-    @Override
-    public Paciente actualizar(Paciente paciente) {
-        try {
-            if (paciente.getId() == null) {
-                throw new DatoInvalidoException("ID Paciente", "Para actualizar, el paciente debe tener un ID asignado.");
-            }
-            Paciente actualizado = pacienteRepository.actualizar(paciente);
-            if (actualizado == null) {
-                throw new PacienteNoEncontradoException(paciente.getId());
-            }
-            return actualizado;
-        } catch (ClinicaException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ClinicaException("Error al actualizar el paciente: " + e.getMessage(), "ERR_GEN_004");
-        }
-    }
-
-    @Override
-    public List<Paciente> listarTodos() {
-        try {
-            return pacienteRepository.buscarTodos();
-        } catch (Exception e) {
-            throw new ClinicaException("Error al listar los pacientes: " + e.getMessage(), "ERR_GEN_005");
-        }
+    protected void validarReglasNegocioActualizacion(Paciente paciente) {
+        Validador.validarId(paciente.getId(), "ID Paciente");
+        Validador.validarTextoObligatorio(paciente.getNombre(), "Nombre", "El nombre es obligatorio.");
+        Validador.validarTextoObligatorio(paciente.getApellido(), "Apellido", "El apellido es obligatorio.");
+        Validador.validarTextoObligatorio(paciente.getDni(), "DNI", "El DNI es obligatorio.");
     }
 }
