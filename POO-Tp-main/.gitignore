@@ -1,0 +1,21 @@
+# IDEs
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+
+# Compilación y Salida
+/out/
+/bin/
+/build/
+/dist/
+
+# Sistema Operativo
+.DS_Store
+Thumbs.db
+
+# PERSISTENCIA (Lo que acordamos)
+src/data/*.dat
+
