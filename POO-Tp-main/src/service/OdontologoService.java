@@ -1,8 +1,5 @@
 package service;
 
-import entity.OdOrtodoncia;
-import entity.OdEndodoncia;
-import entity.OdExtraccion;
 import entity.Odontologo;
 import repository.IRepository;
 import repository.OdontologoRepository;
@@ -38,18 +35,14 @@ public class OdontologoService implements IService<Odontologo> {
                 }
             }
 
-            Double recargo = null;
-            if (odontologo instanceof OdOrtodoncia) {
-                recargo = ((OdOrtodoncia) odontologo).getRecargoEspecialidad();
-            } else if (odontologo instanceof OdEndodoncia) {
-                recargo = ((OdEndodoncia) odontologo).getRecargoEspecialidad();
-            } else if (odontologo instanceof OdExtraccion) {
-                recargo = ((OdExtraccion) odontologo).getRecargoEspecialidad();
+            // Validamos directamente el enum y el atributo de la clase base
+            if (odontologo.getEspecialidad() == null) {
+                throw new DatoInvalidoException("Especialidad", "Debe asignar una especialidad al odontólogo.");
+            }
+            if (odontologo.getRecargoEspecialidad() == null || odontologo.getRecargoEspecialidad() <= 0) {
+                throw new DatoInvalidoException("Recargo Especialidad", "Debe ser un valor mayor a 0.");
             }
 
-            if (recargo == null || recargo <= 0) {
-                throw new DatoInvalidoException("Recargo Especialidad", "Debe ser un multiplicador mayor a 0.");
-            }
 
             System.out.println("Validaciones superadas con éxito. Registrando odontólogo...");
             return odontologoRepository.guardar(odontologo);

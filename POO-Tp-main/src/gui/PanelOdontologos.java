@@ -77,46 +77,46 @@ public class PanelOdontologos extends JPanel {
         add(new JScrollPane(tablaOdontologos), BorderLayout.CENTER);
     }
 
-    private void cargarOdontologoEnFormulario(Odontologo o) {
+   private void cargarOdontologoEnFormulario(Odontologo o) {
         idOdontologoSeleccionado = o.getId();
         txtNombre.setText(o.getNombre());
         txtApellido.setText(o.getApellido());
         txtDni.setText(o.getDni());
         txtMatricula.setText(o.getMatricula());
+        
+        // El recargo ahora es directo de la clase base
+        txtRecargo.setText(String.valueOf(o.getRecargoEspecialidad()));
 
-        if (o instanceof OdOrtodoncia) {
-            cmbEspecialidad.setSelectedIndex(0);
-            txtRecargo.setText(String.valueOf(((OdOrtodoncia) o).getRecargoEspecialidad()));
-        } else if (o instanceof OdEndodoncia) {
-            cmbEspecialidad.setSelectedIndex(1);
-            txtRecargo.setText(String.valueOf(((OdEndodoncia) o).getRecargoEspecialidad()));
-        } else if (o instanceof OdExtraccion) {
-            cmbEspecialidad.setSelectedIndex(2);
-            txtRecargo.setText(String.valueOf(((OdExtraccion) o).getRecargoEspecialidad()));
+        // Evaluamos el enum en lugar de las subclases
+        if (o.getEspecialidad() != null) {
+            switch (o.getEspecialidad()) {
+                case ORTODONCIA -> cmbEspecialidad.setSelectedIndex(0);
+                case ENDODONCIA -> cmbEspecialidad.setSelectedIndex(1);
+                case EXTRACCION -> cmbEspecialidad.setSelectedIndex(2);
+            }
         }
     }
-
     private void guardarOdontologo() {
-
         if (idOdontologoSeleccionado != null) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Está editando un odontólogo. Use el botón Modificar."
-            );
+            JOptionPane.showMessageDialog(this, "Está editando un odontólogo. Use el botón Modificar.");
             return;
         }
 
         try {
             Double recargo = Double.parseDouble(txtRecargo.getText());
-            Odontologo o = switch (cmbEspecialidad.getSelectedIndex()) {
-                case 0 -> { OdOrtodoncia od = new OdOrtodoncia(); od.setRecargoEspecialidad(recargo); yield od; }
-                case 1 -> { OdEndodoncia od = new OdEndodoncia(); od.setRecargoEspecialidad(recargo); yield od; }
-                case 2 -> { OdExtraccion od = new OdExtraccion(); od.setRecargoEspecialidad(recargo); yield od; }
+            Odontologo o = new Odontologo();
+            
+            // Mapeamos el ComboBox al Enum
+            Especialidad esp = switch (cmbEspecialidad.getSelectedIndex()) {
+                case 0 -> Especialidad.ORTODONCIA;
+                case 1 -> Especialidad.ENDODONCIA;
+                case 2 -> Especialidad.EXTRACCION;
                 default -> null;
             };
 
-            if (o != null) {
-
+            if (esp != null) {
+                o.setEspecialidad(esp);
+                o.setRecargoEspecialidad(recargo);
                 o.setNombre(txtNombre.getText());
                 o.setApellido(txtApellido.getText());
                 o.setDni(txtDni.getText());
@@ -149,69 +149,39 @@ public class PanelOdontologos extends JPanel {
 
     private void modificarOdontologo() {
         if (idOdontologoSeleccionado == null) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Seleccione un odontólogo de la tabla.",
-                    "Atención",
-                    JOptionPane.WARNING_MESSAGE
-            );
+            JOptionPane.showMessageDialog(this, "Seleccione un odontólogo de la tabla.", "Atención", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         try {
             Double recargo = Double.parseDouble(txtRecargo.getText());
+            Odontologo o = new Odontologo();
 
-            Odontologo o = switch (cmbEspecialidad.getSelectedIndex()) {
-                case 0 -> {
-                    OdOrtodoncia od = new OdOrtodoncia();
-                    od.setRecargoEspecialidad(recargo);
-                    yield od;
-                }
-                case 1 -> {
-                    OdEndodoncia od = new OdEndodoncia();
-                    od.setRecargoEspecialidad(recargo);
-                    yield od;
-                }
-                case 2 -> {
-                    OdExtraccion od = new OdExtraccion();
-                    od.setRecargoEspecialidad(recargo);
-                    yield od;
-                }
+            Especialidad esp = switch (cmbEspecialidad.getSelectedIndex()) {
+                case 0 -> Especialidad.ORTODONCIA;
+                case 1 -> Especialidad.ENDODONCIA;
+                case 2 -> Especialidad.EXTRACCION;
                 default -> null;
             };
 
-            if (o != null) {
-                o.setId(idOdontologoSeleccionado);
+            if (esp != null) {
+                o.setId(idOdontologoSeleccionado); // Dato clave para el UPDATE
+                o.setEspecialidad(esp);
+                o.setRecargoEspecialidad(recargo);
                 o.setNombre(txtNombre.getText());
                 o.setApellido(txtApellido.getText());
                 o.setDni(txtDni.getText());
                 o.setMatricula(txtMatricula.getText());
 
                 controller.actualizarOdontologo(o);
-
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Odontólogo actualizado correctamente."
-                );
-
+                JOptionPane.showMessageDialog(this, "Odontólogo actualizado correctamente.");
                 limpiarFormulario();
                 cargarTabla();
             }
-
         } catch (ClinicaException ex) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    ex.getMessage(),
-                    "Error de Negocio",
-                    JOptionPane.WARNING_MESSAGE
-            );
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error de Negocio", JOptionPane.WARNING_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Datos numéricos inválidos.",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-            );
+            JOptionPane.showMessageDialog(this, "Datos numéricos inválidos.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

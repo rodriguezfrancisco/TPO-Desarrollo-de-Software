@@ -2,7 +2,7 @@ package entity;
 
 import java.io.Serializable;
 
-public abstract class Odontologo implements Serializable {
+public class Odontologo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
@@ -12,12 +12,13 @@ public abstract class Odontologo implements Serializable {
     private String email;
     private String telefono;
     private String matricula;
+    private Especialidad especialidad; // Nueva propiedad para la especialidad
     private Double recargoEspecialidad;
 
     public Odontologo() {}
 
 
-    public Odontologo(Long id, String nombre, String apellido, String dni, String email, String telefono, String matricula, Double recargoEspecialidad) {
+    public Odontologo(Long id, String nombre, String apellido, String dni, String email, String telefono, String matricula, Especialidad especialidad, Double recargoEspecialidad) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -25,6 +26,7 @@ public abstract class Odontologo implements Serializable {
         this.email = email;
         this.telefono = telefono;
         this.matricula = matricula;
+        this.especialidad = especialidad;
         this.recargoEspecialidad = recargoEspecialidad;
     }
 
@@ -45,11 +47,13 @@ public abstract class Odontologo implements Serializable {
     public void setTelefono(String telefono) { this.telefono = telefono; }
     public String getMatricula() { return matricula; }
     public void setMatricula(String matricula) { this.matricula = matricula; }
+    public Especialidad getEspecialidad() { return especialidad; }
+    public void setEspecialidad(Especialidad especialidad) { this.especialidad = especialidad; }
     public Double getRecargoEspecialidad() { return recargoEspecialidad; }
     public void setRecargoEspecialidad(Double recargoEspecialidad) { this.recargoEspecialidad = recargoEspecialidad; }
 
     @Override
     public String toString() {
-        return "[ID: " + id + "] " + nombre + " " + apellido + " - Matrícula: " + matricula;
+        return "[ID: " + id + "] " + nombre + " " + apellido + " - Matrícula: " + matricula + " - Especialidad: " + especialidad;
     }
 }

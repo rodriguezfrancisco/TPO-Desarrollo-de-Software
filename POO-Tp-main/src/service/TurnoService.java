@@ -1,9 +1,6 @@
 package service;
 
 import entity.Odontologo;
-import entity.OdOrtodoncia;
-import entity.OdEndodoncia;
-import entity.OdExtraccion;
 import entity.Paciente;
 import entity.PacienteParticular;
 import entity.PacienteObraSocial;
@@ -90,14 +87,10 @@ public class TurnoService implements IService<Turno> {
             if (pacienteReal instanceof PacienteParticular) {
                 PacienteParticular pP = (PacienteParticular) pacienteReal;
                 double costoFinal = pP.getTarifaBase();
-
-                if (odontologoReal instanceof OdOrtodoncia) {
-                    costoFinal += ((OdOrtodoncia) odontologoReal).getRecargoEspecialidad();
-                } else if (odontologoReal instanceof OdEndodoncia) {
-                    costoFinal += ((OdEndodoncia) odontologoReal).getRecargoEspecialidad();
-                } else if (odontologoReal instanceof OdExtraccion) {
-                    costoFinal += ((OdExtraccion) odontologoReal).getRecargoEspecialidad();
-                }
+                
+                // Sumamos directamente el recargo. ¡Adiós a los if/else encadenados!
+                costoFinal += odontologoReal.getRecargoEspecialidad();
+                
                 turno.setMontoFacturacion(costoFinal);
             } else if (pacienteReal instanceof PacienteObraSocial) {
                 turno.setMontoFacturacion(0.0);

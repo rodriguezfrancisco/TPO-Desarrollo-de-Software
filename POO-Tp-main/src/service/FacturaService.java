@@ -22,19 +22,18 @@ public class FacturaService {
             throw new DatoInvalidoException("Facturación", "El turno debe contar con Paciente y Odontólogo asignados.");
         }
 
-        // 1. Determinar Especialidad y Recargo
+        // 1. Determinar Especialidad y Recargo (Directo desde la entidad)
         String nombreEspecialidad = "General";
         double recargoEspecialidad = 0.0;
 
-        if (odontologo instanceof OdOrtodoncia) {
-            nombreEspecialidad = "Ortodoncia";
-            recargoEspecialidad = ((OdOrtodoncia) odontologo).getRecargoEspecialidad();
-        } else if (odontologo instanceof OdEndodoncia) {
-            nombreEspecialidad = "Endodoncia";
-            recargoEspecialidad = ((OdEndodoncia) odontologo).getRecargoEspecialidad();
-        } else if (odontologo instanceof OdExtraccion) {
-            nombreEspecialidad = "Extracción";
-            recargoEspecialidad = ((OdExtraccion) odontologo).getRecargoEspecialidad();
+        if (odontologo.getEspecialidad() != null) {
+            // Capitalizamos el nombre del Enum para que se vea bien en el texto (ej: ORTODONCIA -> Ortodoncia)
+            String especialidadEnum = odontologo.getEspecialidad().name();
+            nombreEspecialidad = especialidadEnum.charAt(0) + especialidadEnum.substring(1).toLowerCase();
+        }
+        
+        if (odontologo.getRecargoEspecialidad() != null) {
+            recargoEspecialidad = odontologo.getRecargoEspecialidad();
         }
 
         // 2. Determinar Tarifa Base y Cobertura
