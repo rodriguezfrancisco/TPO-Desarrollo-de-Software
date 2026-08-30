@@ -2,10 +2,10 @@ package gui;
 
 import controller.ClinicaController;
 import entity.*;
-import service.ClinicaException;
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import service.ClinicaException;
 
 public class PanelOdontologos extends JPanel {
     private final ClinicaController controller;
@@ -104,7 +104,7 @@ public class PanelOdontologos extends JPanel {
 
         try {
             Double recargo = Double.parseDouble(txtRecargo.getText());
-            Odontologo o = new Odontologo();
+            Odontologo odontologo = new Odontologo();
             
             // Mapeamos el ComboBox al Enum
             Especialidad esp = switch (cmbEspecialidad.getSelectedIndex()) {
@@ -115,14 +115,14 @@ public class PanelOdontologos extends JPanel {
             };
 
             if (esp != null) {
-                o.setEspecialidad(esp);
-                o.setRecargoEspecialidad(recargo);
-                o.setNombre(txtNombre.getText());
-                o.setApellido(txtApellido.getText());
-                o.setDni(txtDni.getText());
-                o.setMatricula(txtMatricula.getText());
+                odontologo.setEspecialidad(esp);
+                odontologo.setRecargoEspecialidad(recargo);
+                odontologo.setNombre(txtNombre.getText());
+                odontologo.setApellido(txtApellido.getText());
+                odontologo.setDni(txtDni.getText());
+                odontologo.setMatricula(txtMatricula.getText());
 
-                controller.registrarOdontologo(o);
+                controller.registrarOdontologo(odontologo);
                 JOptionPane.showMessageDialog(this, "Odontólogo guardado con éxito.");
                 limpiarFormulario();
                 cargarTabla();
@@ -155,7 +155,7 @@ public class PanelOdontologos extends JPanel {
 
         try {
             Double recargo = Double.parseDouble(txtRecargo.getText());
-            Odontologo o = new Odontologo();
+            Odontologo odontologo = new Odontologo();
 
             Especialidad esp = switch (cmbEspecialidad.getSelectedIndex()) {
                 case 0 -> Especialidad.ORTODONCIA;
@@ -165,15 +165,15 @@ public class PanelOdontologos extends JPanel {
             };
 
             if (esp != null) {
-                o.setId(idOdontologoSeleccionado); // Dato clave para el UPDATE
-                o.setEspecialidad(esp);
-                o.setRecargoEspecialidad(recargo);
-                o.setNombre(txtNombre.getText());
-                o.setApellido(txtApellido.getText());
-                o.setDni(txtDni.getText());
-                o.setMatricula(txtMatricula.getText());
+                odontologo.setId(idOdontologoSeleccionado); // Dato clave para el UPDATE
+                odontologo.setEspecialidad(esp);
+                odontologo.setRecargoEspecialidad(recargo);
+                odontologo.setNombre(txtNombre.getText());
+                odontologo.setApellido(txtApellido.getText());
+                odontologo.setDni(txtDni.getText());
+                odontologo.setMatricula(txtMatricula.getText());
 
-                controller.actualizarOdontologo(o);
+                controller.actualizarOdontologo(odontologo);
                 JOptionPane.showMessageDialog(this, "Odontólogo actualizado correctamente.");
                 limpiarFormulario();
                 cargarTabla();

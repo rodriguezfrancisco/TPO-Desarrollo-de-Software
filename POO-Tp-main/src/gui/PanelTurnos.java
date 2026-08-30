@@ -2,15 +2,15 @@ package gui;
 
 import controller.ClinicaController;
 import entity.*;
-import service.ClinicaException;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import service.ClinicaException;
 
 public class PanelTurnos extends JPanel {
     private final ClinicaController controller;
@@ -114,10 +114,10 @@ public class PanelTurnos extends JPanel {
         spinnerFecha.setValue(date);
 
         // Mapear LocalTime al JSpinner de Hora
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, t.getHora().getHour());
-        cal.set(Calendar.MINUTE, t.getHora().getMinute());
-        spinnerHora.setValue(cal.getTime());
+        Calendar calendarioHora = Calendar.getInstance();
+        calendarioHora.set(Calendar.HOUR_OF_DAY, t.getHora().getHour());
+        calendarioHora.set(Calendar.MINUTE, t.getHora().getMinute());
+        spinnerHora.setValue(calendarioHora.getTime());
     }
 
     private void guardarTurno() {
@@ -136,24 +136,24 @@ public class PanelTurnos extends JPanel {
                 return;
             }
 
-            Turno t = new Turno();
+            Turno turno = new Turno();
 
-            t.setPaciente(pacOpt.get());
-            t.setOdontologo(odoOpt.get());
+            turno.setPaciente(pacOpt.get());
+            turno.setOdontologo(odoOpt.get());
 
             // Convertir JSpinner Fecha a LocalDate
             Date dateValue = (Date) spinnerFecha.getValue();
             LocalDate fecha = dateValue.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            t.setFecha(fecha);
+            turno.setFecha(fecha);
 
             // Convertir JSpinner Hora a LocalTime
             Date timeValue = (Date) spinnerHora.getValue();
             LocalTime hora = timeValue.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
-            t.setHora(hora);
+            turno.setHora(hora);
 
-            t.setEstado((EstadoTurno) cmbEstado.getSelectedItem());
+            turno.setEstado((EstadoTurno) cmbEstado.getSelectedItem());
 
-            Turno registrado = controller.agendarTurno(t);
+            Turno registrado = controller.agendarTurno(turno);
             if (registrado != null) {
                 String mensajeFactura = (registrado.getMontoFacturacion() == 0.0)
                         ? "Cubierto por Obra Social"
@@ -172,18 +172,18 @@ public class PanelTurnos extends JPanel {
 
     private void cargarTabla() {
         modeloTabla.setRowCount(0);
-        for (Turno t : controller.listarTurnos()) {
-            String cobro = (t.getMontoFacturacion() == null || t.getMontoFacturacion() == 0.0)
+        for (Turno turno : controller.listarTurnos()) {
+            String cobro = (turno.getMontoFacturacion() == null || turno.getMontoFacturacion() == 0.0)
                     ? "Obra Social"
-                    : "$" + t.getMontoFacturacion();
+                    : "$" + turno.getMontoFacturacion();
 
             modeloTabla.addRow(new Object[]{
-                    t.getId(),
-                    t.getFecha(),
-                    t.getHora(),
-                    t.getPaciente().getApellido(),
-                    t.getOdontologo().getApellido(),
-                    t.getEstado(),
+                    turno.getId(),
+                    turno.getFecha(),
+                    turno.getHora(),
+                    turno.getPaciente().getApellido(),
+                    turno.getOdontologo().getApellido(),
+                    turno.getEstado(),
                     cobro
             });
         }

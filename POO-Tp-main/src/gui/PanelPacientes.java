@@ -2,11 +2,11 @@ package gui;
 
 import controller.ClinicaController;
 import entity.*;
-import service.ClinicaException;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import service.ClinicaException;
 
 public class PanelPacientes extends JPanel {
     private final ClinicaController controller;
@@ -134,40 +134,40 @@ public class PanelPacientes extends JPanel {
             txtProvincia.setText(p.getDomicilio().getProvincia());
         }
 
-        if (p instanceof PacienteParticular pp) {
+        if (p instanceof PacienteParticular pacienteObraParticular) {
             cmbCobertura.setSelectedIndex(0);
-            txtDatoCobertura.setText(String.valueOf(pp.getTarifaBase()));
-        } else if (p instanceof PacienteObraSocial pos) {
+            txtDatoCobertura.setText(String.valueOf(pacienteObraParticular.getTarifaBase()));
+        } else if (p instanceof PacienteObraSocial pacienteObraSocial) {
             cmbCobertura.setSelectedIndex(1);
-            txtDatoCobertura.setText(pos.getNombreObraSocial());
+            txtDatoCobertura.setText(pacienteObraSocial.getNombreObraSocial());
         }
     }
 
     private void guardarPaciente() {
         try {
-            Domicilio dom = new Domicilio(txtCalle.getText(), txtAltura.getText(), txtLocalidad.getText(), txtProvincia.getText());
-            Paciente p;
+            Domicilio domicilio = new Domicilio(txtCalle.getText(), txtAltura.getText(), txtLocalidad.getText(), txtProvincia.getText());
+            Paciente paciente;
 
             if (cmbCobertura.getSelectedIndex() == 0) {
                 PacienteParticular particular = new PacienteParticular();
                 particular.setTarifaBase(Double.parseDouble(txtDatoCobertura.getText()));
-                p = particular;
+                paciente = particular;
             } else {
                 PacienteObraSocial os = new PacienteObraSocial();
                 os.setNombreObraSocial(txtDatoCobertura.getText());
                 os.setNumAfiliado("AF-" + txtDni.getText());
-                p = os;
+                paciente = os;
             }
 
-            p.setNombre(txtNombre.getText());
-            p.setApellido(txtApellido.getText());
-            p.setDni(txtDni.getText());
-            p.setEmail(txtEmail.getText());
-            p.setTelefono(txtTelefono.getText());
-            p.setFechaIngreso(LocalDate.now());
-            p.setDomicilio(dom);
+            paciente.setNombre(txtNombre.getText());
+            paciente.setApellido(txtApellido.getText());
+            paciente.setDni(txtDni.getText());
+            paciente.setEmail(txtEmail.getText());
+            paciente.setTelefono(txtTelefono.getText());
+            paciente.setFechaIngreso(LocalDate.now());
+            paciente.setDomicilio(domicilio);
 
-            controller.registrarPaciente(p);
+            controller.registrarPaciente(paciente);
             JOptionPane.showMessageDialog(this, "Paciente guardado con éxito.");
             limpiarFormulario();
             cargarTabla();
@@ -190,7 +190,7 @@ public class PanelPacientes extends JPanel {
         }
 
         try {
-            Domicilio dom = new Domicilio(
+            Domicilio domicilio = new Domicilio(
                     txtCalle.getText(),
                     txtAltura.getText(),
                     txtLocalidad.getText(),
@@ -199,7 +199,7 @@ public class PanelPacientes extends JPanel {
 
             Paciente original = controller.buscarPacienteId(idPacienteSeleccionado).orElseThrow();
 
-            Paciente p;
+            Paciente paciente;
 
 
             if (cmbCobertura.getSelectedIndex() == 0) {
@@ -207,24 +207,24 @@ public class PanelPacientes extends JPanel {
                 particular.setTarifaBase(
                         Double.parseDouble(txtDatoCobertura.getText())
                 );
-                p = particular;
+                paciente = particular;
             } else {
                 PacienteObraSocial os = new PacienteObraSocial();
                 os.setNombreObraSocial(txtDatoCobertura.getText());
                 os.setNumAfiliado("AF-" + txtDni.getText());
-                p = os;
+                paciente = os;
             }
 
-            p.setId(idPacienteSeleccionado);
-            p.setNombre(txtNombre.getText());
-            p.setApellido(txtApellido.getText());
-            p.setDni(txtDni.getText());
-            p.setEmail(txtEmail.getText());
-            p.setTelefono(txtTelefono.getText());
-            p.setDomicilio(dom);
-            p.setFechaIngreso(original.getFechaIngreso());
+            paciente.setId(idPacienteSeleccionado);
+            paciente.setNombre(txtNombre.getText());
+            paciente.setApellido(txtApellido.getText());
+            paciente.setDni(txtDni.getText());
+            paciente.setEmail(txtEmail.getText());
+            paciente.setTelefono(txtTelefono.getText());
+            paciente.setDomicilio(domicilio);
+            paciente.setFechaIngreso(original.getFechaIngreso());
 
-            controller.actualizarPaciente(p);
+            controller.actualizarPaciente(paciente);
 
             JOptionPane.showMessageDialog(
                     this,
@@ -253,8 +253,8 @@ public class PanelPacientes extends JPanel {
 
     private void cargarTabla() {
         modeloTabla.setRowCount(0);
-        for (Paciente p : controller.listarPacientes()) {
-            modeloTabla.addRow(new Object[]{p.getId(), p.getNombre(), p.getApellido(), p.getDni()});
+        for (Paciente paciente : controller.listarPacientes()) {
+            modeloTabla.addRow(new Object[]{paciente.getId(), paciente.getNombre(), paciente.getApellido(), paciente.getDni()});
         }
     }
 
