@@ -1,6 +1,6 @@
 package gui;
 
-import controller.ClinicaController;
+import controller.OdontologoController;
 import entity.*;
 import java.awt.*;
 import javax.swing.*;
@@ -8,14 +8,14 @@ import javax.swing.table.DefaultTableModel;
 import service.ClinicaException;
 
 public class PanelOdontologos extends JPanel {
-    private final ClinicaController controller;
+    private final OdontologoController controller;
     private JTextField txtNombre, txtApellido, txtDni, txtMatricula, txtRecargo;
     private JComboBox<String> cmbEspecialidad;
     private JTable tablaOdontologos;
     private DefaultTableModel modeloTabla;
     private Long idOdontologoSeleccionado = null;
 
-    public PanelOdontologos(ClinicaController controller) {
+    public PanelOdontologos(OdontologoController controller) {
         this.controller = controller;
         setLayout(new BorderLayout(10, 10));
         inicializarComponentes();

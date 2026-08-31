@@ -1,6 +1,8 @@
 package gui;
 
-import controller.ClinicaController;
+import controller.OdontologoController;
+import controller.PacienteController;
+import controller.TurnoController;
 import entity.*;
 import java.awt.*;
 import java.time.LocalDate;
@@ -13,7 +15,9 @@ import javax.swing.table.DefaultTableModel;
 import service.ClinicaException;
 
 public class PanelTurnos extends JPanel {
-    private final ClinicaController controller;
+    private final TurnoController controller;
+    private final PacienteController pacienteController;
+    private final OdontologoController odontologoController;
     private JTextField txtIdPaciente, txtIdOdontologo;
     private JSpinner spinnerFecha;
     private JSpinner spinnerHora; // Nuevo selector gráfico para la hora
@@ -22,8 +26,10 @@ public class PanelTurnos extends JPanel {
     private DefaultTableModel modeloTabla;
     private Long idTurnoSeleccionado = null;
 
-    public PanelTurnos(ClinicaController controller) {
+    public PanelTurnos(TurnoController controller, PacienteController pacienteController, OdontologoController odontologoController) {
         this.controller = controller;
+        this.pacienteController = pacienteController;
+        this.odontologoController = odontologoController;
         setLayout(new BorderLayout(10, 10));
         inicializarComponentes();
         cargarTabla();
@@ -123,14 +129,14 @@ public class PanelTurnos extends JPanel {
     private void guardarTurno() {
         try {
             Long idPac = Long.parseLong(txtIdPaciente.getText());
-            var pacOpt = controller.buscarPacienteId(idPac);
+            var pacOpt = pacienteController.buscarPacienteId(idPac);
             if (pacOpt.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Paciente no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             Long idOdo = Long.parseLong(txtIdOdontologo.getText());
-            var odoOpt = controller.buscarOdontologoId(idOdo);
+            var odoOpt = odontologoController.buscarOdontologoId(idOdo);
             if (odoOpt.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Odontólogo no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -202,7 +208,7 @@ public class PanelTurnos extends JPanel {
 
         try {
             Long idPac = Long.parseLong(txtIdPaciente.getText());
-            var pacOpt = controller.buscarPacienteId(idPac);
+            var pacOpt = pacienteController.buscarPacienteId(idPac);
 
             if (pacOpt.isEmpty()) {
                 JOptionPane.showMessageDialog(
@@ -215,7 +221,7 @@ public class PanelTurnos extends JPanel {
             }
 
             Long idOdo = Long.parseLong(txtIdOdontologo.getText());
-            var odoOpt = controller.buscarOdontologoId(idOdo);
+            var odoOpt = odontologoController.buscarOdontologoId(idOdo);
 
             if (odoOpt.isEmpty()) {
                 JOptionPane.showMessageDialog(

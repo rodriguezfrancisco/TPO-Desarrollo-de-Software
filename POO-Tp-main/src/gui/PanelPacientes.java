@@ -1,6 +1,6 @@
 package gui;
 
-import controller.ClinicaController;
+import controller.PacienteController;
 import entity.*;
 import java.awt.*;
 import java.time.LocalDate;
@@ -9,7 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import service.ClinicaException;
 
 public class PanelPacientes extends JPanel {
-    private final ClinicaController controller;
+    private final PacienteController controller;
     private JTextField txtNombre, txtApellido, txtDni, txtEmail, txtTelefono;
     private JTextField txtCalle, txtAltura, txtLocalidad, txtProvincia;
     private JComboBox<String> cmbCobertura;
@@ -19,7 +19,7 @@ public class PanelPacientes extends JPanel {
     private DefaultTableModel modeloTabla;
     private Long idPacienteSeleccionado = null; // Almacena el ID en caso de edición
 
-    public PanelPacientes(ClinicaController controller) {
+    public PanelPacientes(PacienteController controller) {
         this.controller = controller;
         setLayout(new BorderLayout(10, 10));
         inicializarComponentes();

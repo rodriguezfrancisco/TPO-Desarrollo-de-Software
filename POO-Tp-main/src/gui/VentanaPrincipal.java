@@ -1,14 +1,27 @@
 package gui;
 
-import controller.ClinicaController;
+import controller.OdontologoController;
+import controller.PacienteController;
+import controller.TurnoController;
+import service.OdontologoService;
+import service.PacienteService;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class VentanaPrincipal extends JFrame {
-    private final ClinicaController controller;
-
+    private final PacienteController pacienteController;
+    private final OdontologoController odontologoController;
+    private final TurnoController turnoController;
     public VentanaPrincipal() {
-        this.controller = new ClinicaController();
+        PacienteService pacienteServiceCompartido = new PacienteService();
+        OdontologoService odontologoServiceCompartido = new OdontologoService();
+        
+        // 2. Inyectamos las mismas instancias en todos los controladores
+        this.pacienteController = new PacienteController(pacienteServiceCompartido);
+        this.odontologoController = new OdontologoController(odontologoServiceCompartido);
+        this.turnoController = new TurnoController(pacienteServiceCompartido, odontologoServiceCompartido);
+        
         configurarVentana();
         inicializarComponentes();
     }
@@ -33,9 +46,9 @@ public class VentanaPrincipal extends JFrame {
 
         // Contenedor de Pestañas (JTabbedPane)
         JTabbedPane pestanas = new JTabbedPane();
-        pestanas.addTab("Pacientes", new PanelPacientes(controller));
-        pestanas.addTab("Odontólogos", new PanelOdontologos(controller));
-        pestanas.addTab("Turnos", new PanelTurnos(controller));
+        pestanas.addTab("Pacientes", new PanelPacientes(pacienteController));
+        pestanas.addTab("Odontólogos", new PanelOdontologos(odontologoController));
+        pestanas.addTab("Turnos", new PanelTurnos(turnoController, pacienteController, odontologoController));
 
         add(pestanas, BorderLayout.CENTER);
     }
