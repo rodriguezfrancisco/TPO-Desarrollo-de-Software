@@ -13,12 +13,12 @@ public class Odontologo implements Serializable {
     private String telefono;
     private String matricula;
     private Especialidad especialidad; // Nueva propiedad para la especialidad
-    private Double recargoEspecialidad;
+    private Double recargo;
 
     public Odontologo() {}
 
 
-    public Odontologo(Long id, String nombre, String apellido, String dni, String email, String telefono, String matricula, Especialidad especialidad, Double recargoEspecialidad) {
+    public Odontologo(Long id, String nombre, String apellido, String dni, String email, String telefono, String matricula, Especialidad especialidad, Double recargo) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -27,7 +27,7 @@ public class Odontologo implements Serializable {
         this.telefono = telefono;
         this.matricula = matricula;
         this.especialidad = especialidad;
-        this.recargoEspecialidad = recargoEspecialidad;
+        this.recargo = recargo;
     }
 
     
@@ -49,8 +49,8 @@ public class Odontologo implements Serializable {
     public void setMatricula(String matricula) { this.matricula = matricula; }
     public Especialidad getEspecialidad() { return especialidad; }
     public void setEspecialidad(Especialidad especialidad) { this.especialidad = especialidad; }
-    public Double getRecargoEspecialidad() { return recargoEspecialidad; }
-    public void setRecargoEspecialidad(Double recargoEspecialidad) { this.recargoEspecialidad = recargoEspecialidad; }
+    public Double getRecargo() { return recargo; }
+    public void setRecargo(Double recargo) { this.recargo= recargo; }
 
     @Override
     public String toString() {

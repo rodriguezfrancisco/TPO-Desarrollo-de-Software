@@ -85,7 +85,7 @@ public class PanelOdontologos extends JPanel {
         txtMatricula.setText(o.getMatricula());
         
         // El recargo ahora es directo de la clase base
-        txtRecargo.setText(String.valueOf(o.getRecargoEspecialidad()));
+        txtRecargo.setText(String.valueOf(o.getRecargo()));
 
         // Evaluamos el enum en lugar de las subclases
         if (o.getEspecialidad() != null) {
@@ -116,7 +116,7 @@ public class PanelOdontologos extends JPanel {
 
             if (esp != null) {
                 odontologo.setEspecialidad(esp);
-                odontologo.setRecargoEspecialidad(recargo);
+                odontologo.setRecargo(recargo);
                 odontologo.setNombre(txtNombre.getText());
                 odontologo.setApellido(txtApellido.getText());
                 odontologo.setDni(txtDni.getText());
@@ -167,7 +167,7 @@ public class PanelOdontologos extends JPanel {
             if (esp != null) {
                 odontologo.setId(idOdontologoSeleccionado); // Dato clave para el UPDATE
                 odontologo.setEspecialidad(esp);
-                odontologo.setRecargoEspecialidad(recargo);
+                odontologo.setRecargo(recargo);
                 odontologo.setNombre(txtNombre.getText());
                 odontologo.setApellido(txtApellido.getText());
                 odontologo.setDni(txtDni.getText());

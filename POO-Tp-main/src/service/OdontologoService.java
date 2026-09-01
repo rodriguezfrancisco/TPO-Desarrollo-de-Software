@@ -24,7 +24,7 @@ public class OdontologoService extends BaseService<Odontologo> {
         
         // Validación con la nueva estructura del Enum
         Validador.validarObjeto(odontologo.getEspecialidad(), "Especialidad", "Debe asignar una especialidad.");
-        Validador.validarNumeroPositivo(odontologo.getRecargoEspecialidad(), "Recargo Especialidad", "Debe ser un multiplicador mayor a 0.");
+        Validador.validarNumeroPositivo(odontologo.getRecargo(), "Recargo Especialidad", "Debe ser un multiplicador mayor a 0.");
 
         // Validar Matrícula duplicada
         if (repository.buscarTodos().stream().anyMatch(o -> o.getMatricula().equalsIgnoreCase(odontologo.getMatricula()))) {

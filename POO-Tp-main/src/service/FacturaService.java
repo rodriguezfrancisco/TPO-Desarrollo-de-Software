@@ -39,14 +39,14 @@ public class FacturaService {
 
         // Determinar Especialidad y Recargo
         String nombreEspecialidad = "General";
-        double recargoEspecialidad = 0.0;
+        double recargo = 0.0;
 
         if (odontologo.getEspecialidad() != null) {
             String especialidadEnum = odontologo.getEspecialidad().name();
             nombreEspecialidad = especialidadEnum.charAt(0) + especialidadEnum.substring(1).toLowerCase();
         }
-        if (odontologo.getRecargoEspecialidad() != null) {
-            recargoEspecialidad = odontologo.getRecargoEspecialidad();
+        if (odontologo.getRecargo() != null) {
+            recargo = odontologo.getRecargo();
         }
 
         // Determinar Tarifa Base y Cobertura
@@ -57,7 +57,7 @@ public class FacturaService {
 
         if (paciente instanceof PacienteParticular particular) {
             tarifaBase = particular.getTarifaBase() != null ? particular.getTarifaBase() : 0.0;
-            totalAPagar = tarifaBase + recargoEspecialidad;
+            totalAPagar = tarifaBase + recargo;
             detalleCobertura = "Particular (Sin cobertura de obra social)";
         } else if (paciente instanceof PacienteObraSocial os) {
             esParticular = false;
@@ -66,7 +66,7 @@ public class FacturaService {
             detalleCobertura = "Obra Social: " + os.getNombreObraSocial() + " (Afiliado Nº: " + os.getNumAfiliado() + ")";
         }
 
-        return new LiquidacionDTO(nombreEspecialidad, recargoEspecialidad, tarifaBase, detalleCobertura, totalAPagar, esParticular);
+        return new LiquidacionDTO(nombreEspecialidad, recargo, tarifaBase, detalleCobertura, totalAPagar, esParticular);
     }
 
     // 4. PRESENTACIÓN (Armado del String)
@@ -101,12 +101,12 @@ public class FacturaService {
         
         if (liquidacion.esParticular()) {
             sb.append(String.format(" Tarifa Base Consulta:          $%10.2f\n", liquidacion.tarifaBase()));
-            sb.append(String.format(" Recargo por %-16s:  $%10.2f\n", liquidacion.nombreEspecialidad(), liquidacion.recargoEspecialidad()));
+            sb.append(String.format(" Recargo por %-16s:  $%10.2f\n", liquidacion.nombreEspecialidad(), liquidacion.recargo()));
             sb.append("----------------------------------------------------\n");
             sb.append(String.format(" TOTAL A ABONAR EN CAJA:        $%10.2f\n", liquidacion.totalAPagar()));
         } else {
             sb.append(" Consulta y Procedimiento 100% Cubiertos por Obra Social.\n");
-            sb.append(String.format(" Recargo Especialidad asumido:  $%10.2f\n", liquidacion.recargoEspecialidad()));
+            sb.append(String.format(" Recargo Especialidad asumido:  $%10.2f\n", liquidacion.recargo()));
             sb.append("----------------------------------------------------\n");
             sb.append(" TOTAL A ABONAR:                $      0.00\n");
         }
@@ -138,7 +138,7 @@ public class FacturaService {
     // --- CLASE AUXILIAR DE TRANSFERENCIA DE DATOS (DTO) ---
     private record LiquidacionDTO(
             String nombreEspecialidad,
-            double recargoEspecialidad,
+            double recargo,
             double tarifaBase,
             String detalleCobertura,
             double totalAPagar,

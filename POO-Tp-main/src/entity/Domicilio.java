@@ -30,6 +30,17 @@ public class Domicilio implements Serializable {
         this.provincia = provincia;
     }
 
+    // CONSTRUCTOR 3: Constructor de copia
+    public Domicilio(Domicilio otrosDatos) {
+        if (otrosDatos != null) {
+            this.id = otrosDatos.id;
+            this.calle = otrosDatos.calle;
+            this.altura = otrosDatos.altura;
+            this.localidad = otrosDatos.localidad;
+            this.provincia = otrosDatos.provincia;
+        }
+    }
+
     // Getters y Setters...
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

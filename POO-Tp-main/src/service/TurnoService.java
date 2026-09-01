@@ -89,7 +89,7 @@ public class TurnoService implements IService<Turno> {
                 double costoFinal = pP.getTarifaBase();
                 
                 // Sumamos directamente el recargo. ¡Adiós a los if/else encadenados!
-                costoFinal += odontologoReal.getRecargoEspecialidad();
+                costoFinal += odontologoReal.getRecargo();
                 
                 turno.setMontoFacturacion(costoFinal);
             } else if (pacienteReal instanceof PacienteObraSocial) {
