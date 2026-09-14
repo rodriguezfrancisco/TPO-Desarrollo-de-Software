@@ -82,4 +82,9 @@ public abstract class Paciente implements Serializable {
     public String toString() {
         return "[ID: " + id + "] " + nombre + " " + apellido + " - DNI: " + dni;
     }
+
+    // --- MÉTODOS ABSTRACTOS PARA FACTURACIÓN (Polimorfismo) ---
+    public abstract double calcularCostoConsulta(double recargoOdontologo);
+    public abstract String getDetalleCobertura();
+    public abstract String generarDetalleLiquidacion(double recargoOdontologo, String nombreEspecialidad);
 }

@@ -12,9 +12,9 @@ public class TurnoController {
     private final TurnoService turnoService;
     private final FacturaService facturaService;
 
-    public TurnoController(PacienteService pacienteService, OdontologoService odontologoService) {
+    public TurnoController(PacienteService pacienteService, OdontologoService odontologoService, FacturaService facturaService) {
         this.turnoService = new TurnoService(pacienteService, odontologoService);
-        this.facturaService = new FacturaService();
+        this.facturaService = facturaService;
     }
 
     public Turno agendarTurno(Turno t) { 
@@ -37,8 +37,11 @@ public class TurnoController {
         return turnoService.buscarPorId(id);
     }
 
-    // El método de facturación se queda aquí, asociado a la entidad que le da origen
+    
     public String emitirFactura(Turno turno) {
-        return facturaService.generarFactura(turno);
+        entity.Factura nuevaFactura = facturaService.emitirYRegistrarFactura(turno);
+        turnoService.actualizar(turno);
+        // Retornamos solo la ruta física para que el PanelTurnos la muestre
+        return nuevaFactura.getRutaArchivo(); 
     }
 }

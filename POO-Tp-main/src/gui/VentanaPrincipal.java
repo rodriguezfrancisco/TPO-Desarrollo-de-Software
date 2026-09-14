@@ -3,6 +3,8 @@ package gui;
 import controller.OdontologoController;
 import controller.PacienteController;
 import controller.TurnoController;
+import service.FacturaService;
+import controller.FacturaController;
 import service.OdontologoService;
 import service.PacienteService;
 
@@ -13,15 +15,19 @@ public class VentanaPrincipal extends JFrame {
     private final PacienteController pacienteController;
     private final OdontologoController odontologoController;
     private final TurnoController turnoController;
+    private final FacturaController facturaController;
     public VentanaPrincipal() {
         PacienteService pacienteServiceCompartido = new PacienteService();
         OdontologoService odontologoServiceCompartido = new OdontologoService();
+        FacturaService facturaServiceCompartido = new FacturaService();
+        ;
         
         // 2. Inyectamos las mismas instancias en todos los controladores
         this.pacienteController = new PacienteController(pacienteServiceCompartido);
         this.odontologoController = new OdontologoController(odontologoServiceCompartido);
-        this.turnoController = new TurnoController(pacienteServiceCompartido, odontologoServiceCompartido);
-        
+        this.turnoController = new TurnoController(pacienteServiceCompartido, odontologoServiceCompartido, facturaServiceCompartido);
+        this.facturaController = new FacturaController(facturaServiceCompartido);
+
         configurarVentana();
         inicializarComponentes();
     }
@@ -49,6 +55,7 @@ public class VentanaPrincipal extends JFrame {
         pestanas.addTab("Pacientes", new PanelPacientes(pacienteController));
         pestanas.addTab("Odontólogos", new PanelOdontologos(odontologoController));
         pestanas.addTab("Turnos", new PanelTurnos(turnoController, pacienteController, odontologoController));
+        pestanas.addTab("Facturas", new PanelFacturas(facturaController));
 
         add(pestanas, BorderLayout.CENTER);
     }

@@ -1,0 +1,27 @@
+====================================================
+        CLÍNICA ODONTOLÓGICA 'SONRISA FELIZ'        
+               FACTURA / COMPROBANTE                
+====================================================
+Nº Factura / Turno: 5
+Fecha de Emisión:   14/09/2026 15:47:42
+Fecha del Turno:    2026-08-25 17:50
+----------------------------------------------------
+DATOS DEL PACIENTE:
+ Nombre:    dqwdqwj ojoih
+ DNI:       2313
+ Teléfono:  u
+ Cobertura: Particular (Sin cobertura de obra social)
+----------------------------------------------------
+DATOS DEL PROFESIONAL:
+ Odontólogo:   Dr/a. wdq uiyh
+ Matrícula:    123
+ Especialidad: ENDODONCIA
+----------------------------------------------------
+DETALLE DE LIQUIDACIÓN:
+ Tarifa Base Consulta:          $    300,00
+ Recargo por ENDODONCIA      :  $      0,00
+----------------------------------------------------
+ TOTAL A ABONAR EN CAJA:        $    300,00
+====================================================
+         ¡Gracias por confiar en nosotros!          
+====================================================

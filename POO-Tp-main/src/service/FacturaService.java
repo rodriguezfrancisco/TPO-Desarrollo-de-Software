@@ -1,6 +1,11 @@
 package service;
 
-import entity.*;
+import entity.Factura;
+import entity.Turno;
+import entity.Paciente;
+import entity.Odontologo;
+import repository.FacturaRepository;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -8,72 +13,61 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class FacturaService {
+public class FacturaService extends BaseService<Factura> {
 
-    // 1. MÉTODO ORQUESTADOR (El único público)
-    public String generarFactura(Turno turno) {
-        validarTurno(turno);
+    public FacturaService() {
+        super(new FacturaRepository());
+    }
 
-        LiquidacionDTO liquidacion = calcularLiquidacion(turno);
-        turno.setMontoFacturacion(liquidacion.totalAPagar());
+    @Override
+    protected String getNombreEntidad() { return "factura"; }
 
-        String contenidoFactura = generarTextoComprobante(turno, liquidacion);
+    @Override
+    protected String getCodigoErrorGenerico() { return "ERR_FAC_000"; }
+
+    @Override
+    protected void validarReglasNegocioRegistro(Factura factura) {
+        Validador.validarObjeto(factura.getTurno(), "Turno", "El turno es obligatorio para facturar.");
+        Validador.validarTextoObligatorio(factura.getRutaArchivo(), "Ruta Archivo", "La ruta física del archivo no puede estar vacía.");
+    }
+
+    @Override
+    protected void validarReglasNegocioActualizacion(Factura factura) {
+        Validador.validarId(factura.getId(), "ID Factura");
+        validarReglasNegocioRegistro(factura);
+    }
+
+    /**
+     * Orquesta la creación del .txt y el registro en Base de Datos
+     */
+    public Factura emitirYRegistrarFactura(Turno turno) {
+        if (turno == null || turno.getPaciente() == null || turno.getOdontologo() == null) {
+            throw new DatoInvalidoException("Facturación", "Faltan datos en el turno para facturar.");
+        }
+
+        Paciente paciente = turno.getPaciente();
+        Odontologo odontologo = turno.getOdontologo();
+
+        String nombreEspecialidad = odontologo.getEspecialidad() != null ? 
+            odontologo.getEspecialidad().name() : "General";
+        double recargoEspecialidad = odontologo.getRecargo() != null ? 
+            odontologo.getRecargo() : 0.0;
+
+        double totalAPagar = paciente.calcularCostoConsulta(recargoEspecialidad);
+        turno.setMontoFacturacion(totalAPagar);
+
+        // 1. Crear el archivo físico en disco
+        String contenido = construirContenidoTexto(turno, paciente, odontologo, recargoEspecialidad, nombreEspecialidad);
+        String rutaGenerada = guardarFacturaEnDisco(turno.getId(), contenido);
+
+        // 2. Crear la entidad y registrarla en el CRUD (Base de Datos)
+        Factura nuevaFactura = new Factura(turno, LocalDateTime.now(), totalAPagar, rutaGenerada);
         
-        return guardarFacturaEnDisco(contenidoFactura, turno.getId());
+        // super.registrar() ejecuta las validaciones y lo manda al repository
+        return this.registrar(nuevaFactura); 
     }
 
-    // 2. VALIDACIÓN
-    private void validarTurno(Turno turno) {
-        if (turno == null) {
-            throw new DatoInvalidoException("Facturación", "El turno no puede ser nulo.");
-        }
-        if (turno.getPaciente() == null || turno.getOdontologo() == null) {
-            throw new DatoInvalidoException("Facturación", "El turno debe contar con Paciente y Odontólogo asignados.");
-        }
-    }
-
-    // 3. LÓGICA DE NEGOCIO (Cálculos matemáticos y reglas)
-    private LiquidacionDTO calcularLiquidacion(Turno turno) {
-        Paciente paciente = turno.getPaciente();
-        Odontologo odontologo = turno.getOdontologo();
-
-        // Determinar Especialidad y Recargo
-        String nombreEspecialidad = "General";
-        double recargo = 0.0;
-
-        if (odontologo.getEspecialidad() != null) {
-            String especialidadEnum = odontologo.getEspecialidad().name();
-            nombreEspecialidad = especialidadEnum.charAt(0) + especialidadEnum.substring(1).toLowerCase();
-        }
-        if (odontologo.getRecargo() != null) {
-            recargo = odontologo.getRecargo();
-        }
-
-        // Determinar Tarifa Base y Cobertura
-        double tarifaBase = 0.0;
-        String detalleCobertura = "";
-        double totalAPagar = 0.0;
-        boolean esParticular = true;
-
-        if (paciente instanceof PacienteParticular particular) {
-            tarifaBase = particular.getTarifaBase() != null ? particular.getTarifaBase() : 0.0;
-            totalAPagar = tarifaBase + recargo;
-            detalleCobertura = "Particular (Sin cobertura de obra social)";
-        } else if (paciente instanceof PacienteObraSocial os) {
-            esParticular = false;
-            tarifaBase = 0.0;
-            totalAPagar = 0.0; // Cobertura al 100%
-            detalleCobertura = "Obra Social: " + os.getNombreObraSocial() + " (Afiliado Nº: " + os.getNumAfiliado() + ")";
-        }
-
-        return new LiquidacionDTO(nombreEspecialidad, recargo, tarifaBase, detalleCobertura, totalAPagar, esParticular);
-    }
-
-    // 4. PRESENTACIÓN (Armado del String)
-    private String generarTextoComprobante(Turno turno, LiquidacionDTO liquidacion) {
-        Paciente paciente = turno.getPaciente();
-        Odontologo odontologo = turno.getOdontologo();
-
+    private String construirContenidoTexto(Turno turno, Paciente paciente, Odontologo odontologo, double recargo, String especialidad) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         String fechaEmision = LocalDateTime.now().format(dtf);
 
@@ -90,26 +84,19 @@ public class FacturaService {
         sb.append(" Nombre:    ").append(paciente.getNombre()).append(" ").append(paciente.getApellido()).append("\n");
         sb.append(" DNI:       ").append(paciente.getDni()).append("\n");
         sb.append(" Teléfono:  ").append(paciente.getTelefono() != null ? paciente.getTelefono() : "N/D").append("\n");
-        sb.append(" Cobertura: ").append(liquidacion.detalleCobertura()).append("\n");
+        // Polimorfismo: el paciente sabe cómo mostrar su cobertura
+        sb.append(" Cobertura: ").append(paciente.getDetalleCobertura()).append("\n"); 
         sb.append("----------------------------------------------------\n");
         sb.append("DATOS DEL PROFESIONAL:\n");
         sb.append(" Odontólogo:   Dr/a. ").append(odontologo.getNombre()).append(" ").append(odontologo.getApellido()).append("\n");
         sb.append(" Matrícula:    ").append(odontologo.getMatricula()).append("\n");
-        sb.append(" Especialidad: ").append(liquidacion.nombreEspecialidad()).append("\n");
+        sb.append(" Especialidad: ").append(especialidad).append("\n");
         sb.append("----------------------------------------------------\n");
         sb.append("DETALLE DE LIQUIDACIÓN:\n");
         
-        if (liquidacion.esParticular()) {
-            sb.append(String.format(" Tarifa Base Consulta:          $%10.2f\n", liquidacion.tarifaBase()));
-            sb.append(String.format(" Recargo por %-16s:  $%10.2f\n", liquidacion.nombreEspecialidad(), liquidacion.recargo()));
-            sb.append("----------------------------------------------------\n");
-            sb.append(String.format(" TOTAL A ABONAR EN CAJA:        $%10.2f\n", liquidacion.totalAPagar()));
-        } else {
-            sb.append(" Consulta y Procedimiento 100% Cubiertos por Obra Social.\n");
-            sb.append(String.format(" Recargo Especialidad asumido:  $%10.2f\n", liquidacion.recargo()));
-            sb.append("----------------------------------------------------\n");
-            sb.append(" TOTAL A ABONAR:                $      0.00\n");
-        }
+        // Polimorfismo puro: reemplaza todo el if/else de la versión anterior
+        sb.append(paciente.generarDetalleLiquidacion(recargo, especialidad));
+        
         sb.append("====================================================\n");
         sb.append("         ¡Gracias por confiar en nosotros!          \n");
         sb.append("====================================================\n");
@@ -117,13 +104,13 @@ public class FacturaService {
         return sb.toString();
     }
 
-    // 5. INFRAESTRUCTURA (I/O)
-    private String guardarFacturaEnDisco(String contenidoFactura, Long turnoId) {
+    private String guardarFacturaEnDisco(Long turnoId, String contenidoFactura) {
         File carpetaFacturas = new File("facturas");
         if (!carpetaFacturas.exists()) {
             carpetaFacturas.mkdirs();
         }
 
+        // Usamos File.separator para que funcione igual en Windows o Linux
         String nombreArchivo = "facturas" + File.separator + "Factura_Turno_" + turnoId + ".txt";
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
@@ -135,13 +122,16 @@ public class FacturaService {
         return nombreArchivo;
     }
 
-    // --- CLASE AUXILIAR DE TRANSFERENCIA DE DATOS (DTO) ---
-    private record LiquidacionDTO(
-            String nombreEspecialidad,
-            double recargo,
-            double tarifaBase,
-            String detalleCobertura,
-            double totalAPagar,
-            boolean esParticular
-    ) {}
+    public void anularFactura(Long idFactura) {
+        // Usamos la excepción personalizada que ya tenés en tu arquitectura
+        Factura factura = buscarPorId(idFactura)
+            .orElseThrow(() -> new ClinicaException("Factura no encontrada.", "ERR_FAC_001"));
+
+        if (factura.isAnulada()) {
+            throw new ClinicaException("Esta factura ya se encuentra anulada.", "ERR_FAC_002");
+        }
+
+        factura.setAnulada(true);
+        this.actualizar(factura); // Reutilizamos el método de BaseService
+    }
 }
