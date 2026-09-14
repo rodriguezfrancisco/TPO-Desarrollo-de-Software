@@ -121,11 +121,11 @@ public class PanelPacientes extends JPanel {
 
     private void cargarPacienteEnFormulario(Paciente p) {
         idPacienteSeleccionado = p.getId();
-        txtNombre.setText(p.getNombre());
-        txtApellido.setText(p.getApellido());
-        txtDni.setText(p.getDni());
-        txtEmail.setText(p.getEmail());
-        txtTelefono.setText(p.getTelefono());
+        txtNombre.setText(p.getContacto().getNombre());
+        txtApellido.setText(p.getContacto().getApellido());
+        txtDni.setText(p.getContacto().getDni());
+        txtEmail.setText(p.getContacto().getEmail());
+        txtTelefono.setText(p.getContacto().getTelefono());
 
         if (p.getDomicilio() != null) {
             txtCalle.setText(p.getDomicilio().getCalle());
@@ -159,11 +159,11 @@ public class PanelPacientes extends JPanel {
                 paciente = os;
             }
 
-            paciente.setNombre(txtNombre.getText());
-            paciente.setApellido(txtApellido.getText());
-            paciente.setDni(txtDni.getText());
-            paciente.setEmail(txtEmail.getText());
-            paciente.setTelefono(txtTelefono.getText());
+            paciente.getContacto().setNombre(txtNombre.getText());
+            paciente.getContacto().setApellido(txtApellido.getText());
+            paciente.getContacto().setDni(txtDni.getText());
+            paciente.getContacto().setEmail(txtEmail.getText());
+            paciente.getContacto().setTelefono(txtTelefono.getText());
             paciente.setFechaIngreso(LocalDate.now());
             paciente.setDomicilio(domicilio);
 
@@ -216,11 +216,11 @@ public class PanelPacientes extends JPanel {
             }
 
             paciente.setId(idPacienteSeleccionado);
-            paciente.setNombre(txtNombre.getText());
-            paciente.setApellido(txtApellido.getText());
-            paciente.setDni(txtDni.getText());
-            paciente.setEmail(txtEmail.getText());
-            paciente.setTelefono(txtTelefono.getText());
+            paciente.getContacto().setNombre(txtNombre.getText());
+            paciente.getContacto().setApellido(txtApellido.getText());
+            paciente.getContacto().setDni(txtDni.getText());
+            paciente.getContacto().setEmail(txtEmail.getText());
+            paciente.getContacto().setTelefono(txtTelefono.getText());
             paciente.setDomicilio(domicilio);
             paciente.setFechaIngreso(original.getFechaIngreso());
 
@@ -254,7 +254,7 @@ public class PanelPacientes extends JPanel {
     private void cargarTabla() {
         modeloTabla.setRowCount(0);
         for (Paciente paciente : controller.listarPacientes()) {
-            modeloTabla.addRow(new Object[]{paciente.getId(), paciente.getNombre(), paciente.getApellido(), paciente.getDni()});
+            modeloTabla.addRow(new Object[]{paciente.getId(), paciente.getContacto().getNombre(), paciente.getContacto().getApellido(), paciente.getContacto().getDni()});
         }
     }
 

@@ -4,83 +4,62 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 public abstract class Paciente implements Serializable {
-    private static final long serialVersionUID = 1L;
-
     private Long id;
-    private String nombre;
-    private String apellido;
-    private String dni;
-    private String email;
-    private String telefono;
+    private DatosContacto contacto;
     private LocalDate fechaIngreso;
     private Domicilio domicilio;
 
-    public Paciente() {}
+    public Paciente() {
+    }
 
-    public Paciente(Long id,String nombre, String apellido, String dni, String email, String telefono, LocalDate fechaIngreso, Domicilio domicilio) {
+    public Paciente(Long id, DatosContacto contacto, LocalDate fechaIngreso, Domicilio domicilio) {
         this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.dni = dni;
-        this.email = email;
-        this.telefono = telefono;
+        this.contacto = contacto;
         this.fechaIngreso = fechaIngreso;
         this.domicilio = domicilio;
     }
 
-    // Getters y Setters
-    public Long getId() { 
-        return id; 
+    public Long getId() {
+        return id;
     }
-    public void setId(Long id) { 
-        this.id = id; 
+
+    public void setId(Long id) {
+        this.id = id;
     }
-    public String getNombre() { 
-        return nombre; 
+
+    public DatosContacto getContacto() {
+        return contacto;
     }
-    public void setNombre(String nombre) { 
-        this.nombre = nombre; 
+
+    public void setContacto(DatosContacto contacto) {
+        this.contacto = contacto;
     }
-    public String getApellido() { 
-        return apellido; 
+
+    public LocalDate getFechaIngreso() {
+        return fechaIngreso;
     }
-    public void setApellido(String apellido) { 
-        this.apellido = apellido; 
+
+    public void setFechaIngreso(LocalDate fechaIngreso) {
+        this.fechaIngreso = fechaIngreso;
     }
-    public String getDni() { 
-        return dni; 
+
+    public Domicilio getDomicilio() {
+        return domicilio;
     }
-    public void setDni(String dni) { 
-        this.dni = dni; 
+
+    public void setDomicilio(Domicilio domicilio) {
+        this.domicilio = domicilio;
     }
-    public String getEmail() { 
-        return email; 
-    }
-    public void setEmail(String email) { 
-        this.email = email; 
-    }
-    public String getTelefono() { 
-        return telefono; 
-    }
-    public void setTelefono(String telefono) { 
-        this.telefono = telefono; 
-    }
-    public LocalDate getFechaIngreso() { 
-        return fechaIngreso; 
-    }
-    public void setFechaIngreso(LocalDate fechaIngreso) { 
-        this.fechaIngreso = fechaIngreso; 
-    }
-    public Domicilio getDomicilio() { 
-        return domicilio; 
-    }
-    public void setDomicilio(Domicilio domicilio) { 
-        this.domicilio = domicilio; 
-    }
+
 
     @Override
     public String toString() {
-        return "[ID: " + id + "] " + nombre + " " + apellido + " - DNI: " + dni;
+        return "Paciente{" +
+                "id=" + id +
+                ", contacto=" + contacto +
+                ", fechaIngreso=" + fechaIngreso +
+                ", domicilio=" + domicilio +
+                '}';
     }
 
     // --- MÉTODOS ABSTRACTOS PARA FACTURACIÓN (Polimorfismo) ---

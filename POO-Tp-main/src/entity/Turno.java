@@ -1,8 +1,8 @@
 package entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.io.Serializable;
 
 public class Turno implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -57,7 +57,7 @@ public class Turno implements Serializable {
                 : "Cubierto por Obra Social";
 
         return "[ID Turno: " + id + "] Fecha: " + fecha + " Hora: " + hora +
-                " | Paciente: " + paciente.getNombre() + " " + paciente.getApellido() +
+                " | Paciente: " + paciente.getContacto().getNombre() + " " + paciente.getContacto().getApellido() +
                 " | Médico: " + odontologo.getApellido() +
                 " | Estado: " + estado +
                 " | ===> " + detalleCobro;

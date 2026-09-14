@@ -20,13 +20,13 @@ public class PacienteService extends BaseService<Paciente> {
 
     @Override
     protected void validarReglasNegocioRegistro(Paciente paciente) {
-        Validador.validarTextoObligatorio(paciente.getNombre(), "Nombre", "El nombre es obligatorio.");
-        Validador.validarTextoObligatorio(paciente.getApellido(), "Apellido", "El apellido es obligatorio.");
-        Validador.validarTextoObligatorio(paciente.getDni(), "DNI", "El DNI es obligatorio.");
+        Validador.validarTextoObligatorio(paciente.getContacto().getNombre(), "Nombre", "El nombre es obligatorio.");
+        Validador.validarTextoObligatorio(paciente.getContacto().getApellido(), "Apellido", "El apellido es obligatorio.");
+        Validador.validarTextoObligatorio(paciente.getContacto().getDni(), "DNI", "El DNI es obligatorio.");
 
         // Validar DNI duplicado
-        if (repository.buscarTodos().stream().anyMatch(p -> p.getDni().equals(paciente.getDni()))) {
-            throw new ClinicaException("Ya existe un paciente con el DNI: " + paciente.getDni(), "ERR_PAC_002");
+        if (repository.buscarTodos().stream().anyMatch(p -> p.getContacto().getDni().equals(paciente.getContacto().getDni()))) {
+            throw new ClinicaException("Ya existe un paciente con el DNI: " + paciente.getContacto().getDni(), "ERR_PAC_002");
         }
 
         // Validaciones por tipo de paciente
@@ -41,8 +41,8 @@ public class PacienteService extends BaseService<Paciente> {
     @Override
     protected void validarReglasNegocioActualizacion(Paciente paciente) {
         Validador.validarId(paciente.getId(), "ID Paciente");
-        Validador.validarTextoObligatorio(paciente.getNombre(), "Nombre", "El nombre es obligatorio.");
-        Validador.validarTextoObligatorio(paciente.getApellido(), "Apellido", "El apellido es obligatorio.");
-        Validador.validarTextoObligatorio(paciente.getDni(), "DNI", "El DNI es obligatorio.");
+        Validador.validarTextoObligatorio(paciente.getContacto().getNombre(), "Nombre", "El nombre es obligatorio.");
+        Validador.validarTextoObligatorio(paciente.getContacto().getApellido(), "Apellido", "El apellido es obligatorio.");
+        Validador.validarTextoObligatorio(paciente.getContacto().getDni(), "DNI", "El DNI es obligatorio.");
     }
 }

@@ -187,7 +187,7 @@ public class PanelTurnos extends JPanel {
                     turno.getId(),
                     turno.getFecha(),
                     turno.getHora(),
-                    turno.getPaciente().getApellido(),
+                    turno.getPaciente().getContacto().getApellido(),
                     turno.getOdontologo().getApellido(),
                     turno.getEstado(),
                     cobro

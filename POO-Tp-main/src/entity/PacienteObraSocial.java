@@ -1,7 +1,7 @@
 package entity;
 
-import java.time.LocalDate;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public class PacienteObraSocial extends Paciente implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -11,8 +11,9 @@ public class PacienteObraSocial extends Paciente implements Serializable {
 
     public PacienteObraSocial() {}
 
-    public PacienteObraSocial(Long id, String nombre, String apellido, String dni, String email, String telefono, LocalDate fechaIngreso, Domicilio domicilio, String nombreObraSocial, String numAfiliado) {
-        super(id, nombre, apellido, dni, email, telefono, fechaIngreso, domicilio);
+    public PacienteObraSocial(Long id, DatosContacto contacto, LocalDate fechaIngreso, Domicilio domicilio,
+                              String nombreObraSocial, String numAfiliado) {
+        super(id, contacto, fechaIngreso, domicilio);
         this.nombreObraSocial = nombreObraSocial;
         this.numAfiliado = numAfiliado;
     }

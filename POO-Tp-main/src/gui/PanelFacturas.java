@@ -2,11 +2,10 @@ package gui;
 
 import controller.FacturaController;
 import entity.Factura;
-import service.ClinicaException;
-
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import service.ClinicaException;
 
 public class PanelFacturas extends JPanel {
     private final FacturaController controller;
@@ -57,7 +56,7 @@ public class PanelFacturas extends JPanel {
         modeloTabla.setRowCount(0);
         for (Factura f : controller.listarFacturas()) {
             String estado = f.isAnulada() ? "ANULADA" : "VIGENTE";
-            String paciente = f.getTurno().getPaciente().getApellido();
+            String paciente = f.getTurno().getPaciente().getContacto().getApellido();
             
             modeloTabla.addRow(new Object[]{
                     f.getId(),
