@@ -161,9 +161,7 @@ public class PanelTurnos extends JPanel {
 
             Turno registrado = controller.agendarTurno(turno);
             if (registrado != null) {
-                String mensajeFactura = (registrado.getMontoFacturacion() == 0.0)
-                        ? "Cubierto por Obra Social"
-                        : "Abonar en caja: $" + registrado.getMontoFacturacion();
+                String mensajeFactura = registrado.getDetalleCobro();
 
                 JOptionPane.showMessageDialog(this, "✅ Turno procesado con éxito!\n" + mensajeFactura, "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 limpiarFormulario();
@@ -179,9 +177,7 @@ public class PanelTurnos extends JPanel {
     private void cargarTabla() {
         modeloTabla.setRowCount(0);
         for (Turno turno : controller.listarTurnos()) {
-            String cobro = (turno.getMontoFacturacion() == null || turno.getMontoFacturacion() == 0.0)
-                    ? "Obra Social"
-                    : "$" + turno.getMontoFacturacion();
+            String cobro = turno.getDetalleCobro();
 
             modeloTabla.addRow(new Object[]{
                     turno.getId(),

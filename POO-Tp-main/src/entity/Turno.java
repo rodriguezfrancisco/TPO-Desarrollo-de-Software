@@ -49,17 +49,19 @@ public class Turno implements Serializable {
     public Double getMontoFacturacion() { return montoFacturacion; }
     public void setMontoFacturacion(Double montoFacturacion) { this.montoFacturacion = montoFacturacion; }
 
+    public String getDetalleCobro() {
+        if (this.montoFacturacion == null || this.montoFacturacion == 0.0) {
+            return "Cubierto por Obra Social";
+        }
+        return "$" + this.montoFacturacion;
+    }
+
     @Override
     public String toString() {
-        // Lógica de visualización
-        String detalleCobro = (montoFacturacion != null && montoFacturacion > 0)
-                ? "Abonar en caja: $" + montoFacturacion
-                : "Cubierto por Obra Social";
-
         return "[ID Turno: " + id + "] Fecha: " + fecha + " Hora: " + hora +
                 " | Paciente: " + paciente.getContacto().getNombre() + " " + paciente.getContacto().getApellido() +
                 " | Médico: " + odontologo.getApellido() +
                 " | Estado: " + estado +
-                " | ===> " + detalleCobro;
+                " | ===> " + getDetalleCobro(); 
     }
 }

@@ -159,11 +159,15 @@ public class PanelPacientes extends JPanel {
                 paciente = os;
             }
 
-            paciente.getContacto().setNombre(txtNombre.getText());
-            paciente.getContacto().setApellido(txtApellido.getText());
-            paciente.getContacto().setDni(txtDni.getText());
-            paciente.getContacto().setEmail(txtEmail.getText());
-            paciente.getContacto().setTelefono(txtTelefono.getText());
+            DatosContacto contacto = new DatosContacto(
+                txtNombre.getText(),
+                txtApellido.getText(),
+                txtDni.getText(),
+                txtEmail.getText(),
+                txtTelefono.getText()
+            );
+
+            paciente.setContacto(contacto);
             paciente.setFechaIngreso(LocalDate.now());
             paciente.setDomicilio(domicilio);
 
@@ -215,12 +219,16 @@ public class PanelPacientes extends JPanel {
                 paciente = os;
             }
 
+            DatosContacto contacto = new DatosContacto(
+                txtNombre.getText(),
+                txtApellido.getText(),
+                txtDni.getText(),
+                txtEmail.getText(),
+                txtTelefono.getText()
+            );
+
             paciente.setId(idPacienteSeleccionado);
-            paciente.getContacto().setNombre(txtNombre.getText());
-            paciente.getContacto().setApellido(txtApellido.getText());
-            paciente.getContacto().setDni(txtDni.getText());
-            paciente.getContacto().setEmail(txtEmail.getText());
-            paciente.getContacto().setTelefono(txtTelefono.getText());
+            paciente.setContacto(contacto);
             paciente.setDomicilio(domicilio);
             paciente.setFechaIngreso(original.getFechaIngreso());
 
