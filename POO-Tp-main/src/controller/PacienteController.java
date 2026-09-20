@@ -1,14 +1,14 @@
 package controller;
 
 import entity.Paciente;
-import service.PacienteService;
+import service.IService; 
 import java.util.List;
 import java.util.Optional;
 
 public class PacienteController {
-    private final PacienteService pacienteService;
+    private final IService<Paciente> pacienteService;
 
-    public PacienteController(PacienteService pacienteService) {
+    public PacienteController(IService<Paciente> pacienteService) {
         this.pacienteService = pacienteService;
     }
 

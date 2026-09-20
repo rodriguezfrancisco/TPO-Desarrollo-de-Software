@@ -7,7 +7,6 @@ import entity.PacienteObraSocial;
 import entity.Turno;
 import entity.EstadoTurno;
 import repository.IRepository;
-import repository.TurnoRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,8 +19,8 @@ public class TurnoService implements IService<Turno> {
     private PacienteService pacienteService;
     private OdontologoService odontologoService;
 
-    public TurnoService(PacienteService pacienteService, OdontologoService odontologoService) {
-        this.turnoRepository = new TurnoRepository();
+    public TurnoService(repository.IRepository<Turno> turnoRepository, PacienteService pacienteService, OdontologoService odontologoService) {
+        this.turnoRepository = turnoRepository; // Inyección por parámetro
         this.pacienteService = pacienteService;
         this.odontologoService = odontologoService;
     }

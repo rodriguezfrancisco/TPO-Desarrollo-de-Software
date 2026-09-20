@@ -4,18 +4,14 @@ import entity.Factura;
 import entity.Odontologo;
 import entity.Paciente;
 import entity.Turno;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import repository.FacturaRepository;
 
-public class FacturaService extends BaseService<Factura> {
+public class FacturaService extends BaseService<Factura> implements IFacturaService {
 
-    public FacturaService() {
-        super(new FacturaRepository());
+    public FacturaService(repository.IRepository<Factura> repositorio) {
+        super(repositorio); // Pasamos la dependencia al BaseService
     }
 
     @Override

@@ -1,14 +1,14 @@
 package controller;
 
 import entity.Odontologo;
-import service.OdontologoService;
+import service.IService;
 import java.util.List;
 import java.util.Optional;
 
 public class OdontologoController {
-    private final OdontologoService odontologoService;
+    private final IService<Odontologo> odontologoService;
 
-    public OdontologoController(OdontologoService odontologoService) {
+    public OdontologoController(IService<Odontologo> odontologoService) {
         this.odontologoService = odontologoService;
     }
 

@@ -3,13 +3,11 @@ package service;
 import entity.Paciente;
 import entity.PacienteObraSocial;
 import entity.PacienteParticular;
-import repository.PacienteRepository;
 
 public class PacienteService extends BaseService<Paciente> {
 
-    public PacienteService() {
-        // Inicializamos enviando el repositorio al constructor de BaseService
-        super(new PacienteRepository());
+    public PacienteService(repository.IRepository<Paciente> repositorio) {
+        super(repositorio); // Pasamos la dependencia al BaseService
     }
 
     @Override

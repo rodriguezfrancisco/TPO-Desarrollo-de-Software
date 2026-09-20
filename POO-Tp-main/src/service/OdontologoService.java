@@ -1,13 +1,11 @@
 package service;
 
 import entity.Odontologo;
-import repository.OdontologoRepository;
 
 public class OdontologoService extends BaseService<Odontologo> {
 
-    public OdontologoService() {
-        // Inicializamos enviando el repositorio al constructor de BaseService
-        super(new OdontologoRepository());
+    public OdontologoService(repository.IRepository<Odontologo> repositorio) {
+        super(repositorio); // Pasamos la dependencia al BaseService
     }
 
     @Override
