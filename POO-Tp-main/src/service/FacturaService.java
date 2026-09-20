@@ -55,14 +55,15 @@ public class FacturaService extends BaseService<Factura> {
         double totalAPagar = paciente.calcularCostoConsulta(recargoEspecialidad);
         turno.setMontoFacturacion(totalAPagar);
 
-        // 1. Crear el archivo físico en disco
+        // 1. Armar el texto del comprobante
         String contenido = construirContenidoTexto(turno, paciente, odontologo, recargoEspecialidad, nombreEspecialidad);
-        String rutaGenerada = guardarFacturaEnDisco(turno.getId(), contenido);
+        
+        // Delegamos la creación del archivo físico a nuestra clase de Fabricación Pura
+        String rutaGenerada = GeneradorArchivoFactura.guardarEnDisco(turno.getId(), contenido);
 
         // 2. Crear la entidad y registrarla en el CRUD (Base de Datos)
         Factura nuevaFactura = new Factura(turno, LocalDateTime.now(), totalAPagar, rutaGenerada);
         
-        // super.registrar() ejecuta las validaciones y lo manda al repository
         return this.registrar(nuevaFactura); 
     }
 
@@ -101,24 +102,6 @@ public class FacturaService extends BaseService<Factura> {
         sb.append("====================================================\n");
 
         return sb.toString();
-    }
-
-    private String guardarFacturaEnDisco(Long turnoId, String contenidoFactura) {
-        File carpetaFacturas = new File("facturas");
-        if (!carpetaFacturas.exists()) {
-            carpetaFacturas.mkdirs();
-        }
-
-        // Usamos File.separator para que funcione igual en Windows o Linux
-        String nombreArchivo = "facturas" + File.separator + "Factura_Turno_" + turnoId + ".txt";
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
-            writer.write(contenidoFactura);
-        } catch (IOException e) {
-            throw new ClinicaException("Error al generar el archivo de factura: " + e.getMessage(), "ERR_FAC_001");
-        }
-
-        return nombreArchivo;
     }
 
     public void anularFactura(Long idFactura) {
