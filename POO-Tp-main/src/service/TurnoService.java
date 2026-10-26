@@ -2,8 +2,6 @@ package service;
 
 import entity.Odontologo;
 import entity.Paciente;
-import entity.PacienteParticular;
-import entity.PacienteObraSocial;
 import entity.Turno;
 import entity.EstadoTurno;
 import repository.IRepository;
@@ -83,17 +81,9 @@ public class TurnoService implements IService<Turno> {
             Paciente pacienteReal = pacienteExistente.get();
             Odontologo odontologoReal = odontologoExistente.get();
 
-            if (pacienteReal instanceof PacienteParticular) {
-                PacienteParticular pP = (PacienteParticular) pacienteReal;
-                double costoFinal = pP.getTarifaBase();
-                
-                // Sumamos directamente el recargo. ¡Adiós a los if/else encadenados!
-                costoFinal += odontologoReal.getRecargo();
-                
-                turno.setMontoFacturacion(costoFinal);
-            } else if (pacienteReal instanceof PacienteObraSocial) {
-                turno.setMontoFacturacion(0.0);
-            }
+            // Delega el cálculo a la estrategia actual del paciente (polimorfismo)
+            double costoFinal = pacienteReal.calcularCostoConsulta(odontologoReal.getRecargo());
+            turno.setMontoFacturacion(costoFinal);
 
             turno.setPaciente(pacienteReal);
             turno.setOdontologo(odontologoReal);

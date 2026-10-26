@@ -1,17 +1,13 @@
 package entity;
-
 import java.io.Serializable;
-import java.time.LocalDate;
 
-public class PacienteParticular extends Paciente implements Serializable{
+public class CoberturaParticular implements ICoberturaStrategy, Serializable {
     private static final long serialVersionUID = 1L;
-
     private Double tarifaBase;
 
-    public PacienteParticular() {}
+    public CoberturaParticular() {}
 
-    public PacienteParticular(Long id, DatosContacto contacto, LocalDate fechaIngreso, Domicilio domicilio, Double tarifaBase) {
-        super(id, contacto, fechaIngreso, domicilio);
+    public CoberturaParticular(Double tarifaBase) {
         this.tarifaBase = tarifaBase;
     }
 
@@ -20,9 +16,8 @@ public class PacienteParticular extends Paciente implements Serializable{
 
     @Override
     public double calcularCostoConsulta(double recargoOdontologo) {
-        // Usa la tarifa base propia de esta clase[cite: 19]
         double base = (this.tarifaBase != null) ? this.tarifaBase : 0.0;
-        return base + recargoOdontologo; 
+        return base + recargoOdontologo;
     }
 
     @Override
