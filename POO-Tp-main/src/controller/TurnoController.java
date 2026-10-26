@@ -21,7 +21,14 @@ public class TurnoController {
     public void eliminarTurnoPorId(Long id) { turnoService.eliminarPorId(id); }
     public Optional<Turno> buscarTurnoId(Long id) { return turnoService.buscarPorId(id); }
 
-    public String emitirFactura(Turno turno) {
+    public String emitirFactura(Turno turno, boolean esPdf) {
+        // Intercambiamos el adaptador según la elección de la interfaz gráfica
+        if (esPdf) {
+            facturaService.setAlmacenamiento(new repository.FacturaPdfAdapter("facturas"));
+        } else {
+            facturaService.setAlmacenamiento(new repository.FacturaFileStorage("facturas"));
+        }
+        
         entity.Factura nuevaFactura = facturaService.emitirYRegistrarFactura(turno);
         turnoService.actualizar(turno);
         return nuevaFactura.getRutaArchivo();

@@ -11,7 +11,7 @@ import repository.IRepository;
 import java.time.LocalDateTime;
 
 public class FacturaService extends BaseService<Factura> implements IFacturaService {
-    private final IFacturaStorage facturaStorage;
+    private IFacturaStorage facturaStorage;
     private final FacturaComprobanteFormatter formatter;
 
 
@@ -81,5 +81,11 @@ public class FacturaService extends BaseService<Factura> implements IFacturaServ
         }
         factura.setAnulada(true);
         this.actualizar(factura);
+    }
+
+    // Nuevo método para intercambiar el adaptador dinámicamente
+    @Override
+    public void setAlmacenamiento(IFacturaStorage almacenamiento) {
+        this.facturaStorage = almacenamiento;
     }
 }
