@@ -1,19 +1,19 @@
 package entity.decorator;
 
-public abstract class PrestacionDecorator implements Prestacion {
-    protected final Prestacion prestacionEnvuelta;
+public class ConsultaBase implements Prestacion {
+    private final double tarifaBase;
 
-    public PrestacionDecorator(Prestacion prestacionEnvuelta) {
-        this.prestacionEnvuelta = prestacionEnvuelta;
+    public ConsultaBase(double tarifaBase) {
+        this.tarifaBase = Math.max(0.0, tarifaBase);
     }
 
     @Override
     public double calcularCosto() {
-        return prestacionEnvuelta.calcularCosto();
+        return this.tarifaBase;
     }
 
     @Override
     public String generarDetalle() {
-        return prestacionEnvuelta.generarDetalle();
+        return String.format(" Tarifa Base Consulta:          $%10.2f\n", this.tarifaBase);
     }
 }
