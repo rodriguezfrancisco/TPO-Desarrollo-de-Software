@@ -1,43 +1,81 @@
 package gui;
 
-import facade.ClinicaFacade;
-import javax.swing.*;
+import controller.*;
+import entity.*;
 import java.awt.*;
+import javax.swing.*;
+import repository.*;
+import service.*;
 
 public class VentanaPrincipal extends JFrame {
-    private final ClinicaFacade clinicaFacade;
+    
+    private final PacienteController pacienteController;
+    private final OdontologoController odontologoController;
+    private final TurnoController turnoController;
+    private final FacturaController facturaController;
 
     public VentanaPrincipal() {
-        this.clinicaFacade = new ClinicaFacade(null, null, null, null); // Fachada unificada
+        // 1. CAPA DE PERSISTENCIA
+        // Instanciamos los repositorios concretos pero los tratamos por su abstracción
+        IRepository<Paciente> pacienteRepo = new PacienteRepository();
+        IRepository<Odontologo> odontologoRepo = new OdontologoRepository();
+        IRepository<Turno> turnoRepo = new TurnoRepository();
+        IRepository<Factura> facturaRepo = new FacturaRepository();
+
+        // 2. CAPA DE NEGOCIO (SERVICIOS)
+        // Inyectamos los repositorios en los servicios. 
+        // Nota: PacienteService y OdontologoService se instancian con su clase concreta 
+        // porque TurnoService requiere específicamente esas clases (o sus interfaces) en su constructor.
+        PacienteService pacienteService = new PacienteService(pacienteRepo);
+        OdontologoService odontologoService = new OdontologoService(odontologoRepo);
+        
+        // Usamos las interfaces abstractas para inyectar en los controladores
+        FacturaService facturaService = new FacturaService();
+        IService<Turno> turnoService = new TurnoService(turnoRepo, pacienteService, odontologoService);
+
+        // 3. CAPA DE CONTROL
+        // Los controladores reciben estrictamente las dependencias (interfaces donde corresponde)
+        this.pacienteController = new PacienteController(pacienteService);
+        this.odontologoController = new OdontologoController(odontologoService);
+        this.turnoController = new TurnoController(turnoService, facturaService);
+        this.facturaController = new FacturaController(facturaService);
+        
         configurarVentana();
         inicializarComponentes();
     }
 
     private void configurarVentana() {
         setTitle("Sistema de Gestión Clínica - Sonrisa Feliz");
-        setSize(950, 680);
+        setSize(900, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
     }
 
     private void inicializarComponentes() {
+        // Título Superior
         JPanel panelSuperior = new JPanel();
         panelSuperior.setBackground(new Color(41, 128, 185));
+        
         JLabel lblTitulo = new JLabel("Clínica Odontológica 'Sonrisa Feliz'");
         lblTitulo.setForeground(Color.WHITE);
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 22));
+        
         panelSuperior.add(lblTitulo);
         add(panelSuperior, BorderLayout.NORTH);
 
+        // Contenedor de Pestañas (JTabbedPane)
         JTabbedPane pestanas = new JTabbedPane();
-        pestanas.addTab("Pacientes", new PanelPacientes(clinicaFacade.getPacienteController()));
-        pestanas.addTab("Odontólogos", new PanelOdontologos(clinicaFacade.getOdontologoController()));
-        pestanas.addTab("Turnos", new PanelTurnos(
-            clinicaFacade.getTurnoController(),
-            clinicaFacade.getPacienteController(),
-            clinicaFacade.getOdontologoController()));
-        pestanas.addTab("Facturas", new PanelFacturas(clinicaFacade.getFacturaController()));
+        
+        pestanas.addTab("Pacientes", new PanelPacientes(pacienteController));
+        pestanas.addTab("Odontólogos", new PanelOdontologos(odontologoController));
+        
+        // PanelTurnos necesita 3 controladores según su constructor
+        pestanas.addTab("Turnos", new PanelTurnos(turnoController, pacienteController, odontologoController));
+        
+        // La nueva pestaña de facturación
+        pestanas.addTab("Facturas", new PanelFacturas(facturaController));
+
         add(pestanas, BorderLayout.CENTER);
     }
 }
