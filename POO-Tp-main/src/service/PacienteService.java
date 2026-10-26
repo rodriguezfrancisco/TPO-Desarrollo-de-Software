@@ -1,8 +1,8 @@
 package service;
 
+import entity.CoberturaObraSocial;
+import entity.CoberturaParticular;
 import entity.Paciente;
-import entity.PacienteObraSocial;
-import entity.PacienteParticular;
 
 public class PacienteService extends BaseService<Paciente> {
 
@@ -27,12 +27,12 @@ public class PacienteService extends BaseService<Paciente> {
             throw new ClinicaException("Ya existe un paciente con el DNI: " + paciente.getContacto().getDni(), "ERR_PAC_002");
         }
 
-        // Validaciones por tipo de paciente
-        if (paciente instanceof PacienteObraSocial os) {
-            Validador.validarTextoObligatorio(os.getNombreObraSocial(), "Obra Social", "El nombre de la obra social es obligatorio.");
-            Validador.validarTextoObligatorio(os.getNumAfiliado(), "Número Afiliado", "El número de afiliado es obligatorio.");
-        } else if (paciente instanceof PacienteParticular particular) {
-            Validador.validarNumeroPositivo(particular.getTarifaBase(), "Tarifa Base", "La tarifa base debe ser un monto mayor a 0.");
+        // Validaciones por estrategia de cobertura
+        if (paciente.getCobertura() instanceof CoberturaObraSocial cos) {
+            Validador.validarTextoObligatorio(cos.getNombreObraSocial(), "Obra Social", "El nombre de la obra social es obligatorio.");
+            Validador.validarTextoObligatorio(cos.getNumAfiliado(), "Número Afiliado", "El número de afiliado es obligatorio.");
+        } else if (paciente.getCobertura() instanceof CoberturaParticular cp) {
+            Validador.validarNumeroPositivo(cp.getTarifaBase(), "Tarifa Base", "La tarifa base debe ser un monto mayor a 0.");
         }
     }
 

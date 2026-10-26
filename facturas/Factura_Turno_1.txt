@@ -2,26 +2,26 @@
         CLÍNICA ODONTOLÓGICA 'SONRISA FELIZ'        
                FACTURA / COMPROBANTE                
 ====================================================
-Nº Factura / Turno: 1
-Fecha de Emisión:   12/10/2026 10:57:31
-Fecha del Turno:    2026-10-12 11:30
+N° Factura / Turno: 1
+Fecha de Emisión:   26/10/2026 19:14:30
+Fecha del Turno:    2026-10-27 16:13
 ----------------------------------------------------
 DATOS DEL PACIENTE:
- Nombre:    Vicky Venturini
- DNI:       123
- Teléfono:  098765
- Cobertura: Obra Social: 111 (Afiliado Nº: AF-123)
+ Nombre:    hiu hi
+ DNI:       uh
+ Teléfono:  iu
+ Cobertura: Particular (Sin cobertura de obra social)
 ----------------------------------------------------
 DATOS DEL PROFESIONAL:
- Odontólogo:   Dr/a. Juan Perez
- Matrícula:    555
- Especialidad: EXTRACCION
+ Odontólogo:   Dr/a. iuh iuh
+ Matrícula:    uhi
+ Especialidad: ORTODONCIA
 ----------------------------------------------------
 DETALLE DE LIQUIDACIÓN:
- Consulta y Procedimiento 100% Cubiertos por Obra Social.
- Recargo Especialidad asumido:  $   1000.00
+ Tarifa Base Consulta:          $     10,00
+ Recargo por ORTODONCIA      :  $   1000,00
 ----------------------------------------------------
- TOTAL A ABONAR:                $      0.00
+ TOTAL A ABONAR EN CAJA:        $   1010,00
 ====================================================
-         ¡Gracias por confiar en nosotros!          
+          ¡Gracias por confiar en nosotros!         
 ====================================================

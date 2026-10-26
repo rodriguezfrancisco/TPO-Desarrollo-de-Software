@@ -1,19 +1,14 @@
 package entity;
-
 import java.io.Serializable;
-import java.time.LocalDate;
 
-public class PacienteObraSocial extends Paciente implements Serializable {
+public class CoberturaObraSocial implements ICoberturaStrategy, Serializable {
     private static final long serialVersionUID = 1L;
-
     private String nombreObraSocial;
     private String numAfiliado;
 
-    public PacienteObraSocial() {}
+    public CoberturaObraSocial() {}
 
-    public PacienteObraSocial(Long id, DatosContacto contacto, LocalDate fechaIngreso, Domicilio domicilio,
-                              String nombreObraSocial, String numAfiliado) {
-        super(id, contacto, fechaIngreso, domicilio);
+    public CoberturaObraSocial(String nombreObraSocial, String numAfiliado) {
         this.nombreObraSocial = nombreObraSocial;
         this.numAfiliado = numAfiliado;
     }
@@ -25,14 +20,12 @@ public class PacienteObraSocial extends Paciente implements Serializable {
 
     @Override
     public double calcularCostoConsulta(double recargoOdontologo) {
-        // La obra social cubre el 100% de la consulta y el recargo
         return 0.0; 
     }
 
     @Override
     public String getDetalleCobertura() {
-        // Usa los atributos propios de la obra social[cite: 18]
-        return "Obra Social: " + this.getNombreObraSocial() + " (Afiliado Nº: " + this.getNumAfiliado() + ")";
+        return "Obra Social: " + this.nombreObraSocial + " (Afiliado Nº: " + this.numAfiliado + ")";
     }
 
     @Override
