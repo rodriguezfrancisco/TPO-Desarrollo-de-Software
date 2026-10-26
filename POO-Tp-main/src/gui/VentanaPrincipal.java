@@ -30,8 +30,12 @@ public class VentanaPrincipal extends JFrame {
         PacienteService pacienteService = new PacienteService(pacienteRepo);
         OdontologoService odontologoService = new OdontologoService(odontologoRepo);
         
-        // Usamos las interfaces abstractas para inyectar en los controladores
-        IFacturaService facturaService = new FacturaService(facturaRepo); 
+       // Creamos la nueva estrategia de almacenamiento usando el Adapter
+        IFacturaStorage almacenamientoPdf = new FacturaPdfAdapter("facturas");
+        
+        // Inyectamos el repositorio, el nuevo adaptador PDF y el formateador base
+        IFacturaService facturaService = new FacturaService(facturaRepo, almacenamientoPdf, new FacturaComprobanteFormatter());
+        
         IService<Turno> turnoService = new TurnoService(turnoRepo, pacienteService, odontologoService);
 
         // 3. CAPA DE CONTROL
