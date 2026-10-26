@@ -10,16 +10,15 @@ import entity.decorator.CoberturaObraSocialDecorator;
 import entity.decorator.ConsultaBase;
 import entity.decorator.Prestacion;
 import entity.decorator.RecargoEspecialidadDecorator;
-import repository.FacturaRepository;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import repository.FacturaRepository;
 
-public class FacturaService extends BaseService<Factura> {
+public class FacturaService extends BaseService<Factura> implements IFacturaService {
 
     public FacturaService() {
         super(new FacturaRepository());
@@ -118,9 +117,9 @@ public class FacturaService extends BaseService<Factura> {
         sb.append("Fecha del Turno:    ").append(turno.getFecha()).append(" ").append(turno.getHora()).append("\n");
         sb.append("----------------------------------------------------\n");
         sb.append("DATOS DEL PACIENTE:\n");
-        sb.append(" Nombre:    ").append(paciente.getNombre()).append(" ").append(paciente.getApellido()).append("\n");
-        sb.append(" DNI:       ").append(paciente.getDni()).append("\n");
-        sb.append(" Teléfono:  ").append(paciente.getTelefono() != null ? paciente.getTelefono() : "N/D").append("\n");
+        sb.append(" Nombre:    ").append(paciente.getContacto().getNombre()).append(" ").append(paciente.getContacto().getApellido()).append("\n");
+        sb.append(" DNI:       ").append(paciente.getContacto().getDni()).append("\n");
+        sb.append(" Teléfono:  ").append(paciente.getContacto().getTelefono() != null ? paciente.getContacto().getTelefono() : "N/D").append("\n");
         sb.append(" Cobertura: ").append(paciente.getDetalleCobertura()).append("\n");
         sb.append("----------------------------------------------------\n");
         sb.append("DATOS DEL PROFESIONAL:\n");

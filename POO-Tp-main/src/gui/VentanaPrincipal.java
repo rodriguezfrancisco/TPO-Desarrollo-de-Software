@@ -2,11 +2,10 @@ package gui;
 
 import controller.*;
 import entity.*;
+import java.awt.*;
+import javax.swing.*;
 import repository.*;
 import service.*;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class VentanaPrincipal extends JFrame {
     
@@ -31,7 +30,7 @@ public class VentanaPrincipal extends JFrame {
         OdontologoService odontologoService = new OdontologoService(odontologoRepo);
         
         // Usamos las interfaces abstractas para inyectar en los controladores
-        IFacturaService facturaService = new FacturaService(facturaRepo); 
+        FacturaService facturaService = new FacturaService();
         IService<Turno> turnoService = new TurnoService(turnoRepo, pacienteService, odontologoService);
 
         // 3. CAPA DE CONTROL
