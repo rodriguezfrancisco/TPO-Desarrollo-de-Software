@@ -74,14 +74,16 @@ public class PanelTurnos extends JPanel {
         JButton btnEliminar = new JButton("Eliminar Turno");
         btnEliminar.addActionListener(e -> eliminarTurno());
 
-        JButton btnFactura = new JButton("📄 Generar Factura");
-        btnFactura.addActionListener(e -> generarFacturaTurno());
+        JButton btnFacturaTxt = new JButton("📄 Generar TXT");
+        btnFacturaTxt.addActionListener(e -> generarFacturaTurno(false));
 
+        JButton btnFacturaPdf = new JButton("📕 Generar PDF");
+        btnFacturaPdf.addActionListener(e -> generarFacturaTurno(true));
 
-        JPanel pnlBotones = new JPanel(new GridLayout(2, 2, 5, 5));
+        JPanel pnlBotones = new JPanel(new GridLayout(3, 2, 5, 5)); // Cambiamos a 3 filas
         pnlBotones.add(btnGuardar); pnlBotones.add(btnLimpiar);
         pnlBotones.add(btnModificar); pnlBotones.add(btnEliminar);
-        pnlBotones.add(btnFactura);
+        pnlBotones.add(btnFacturaTxt); pnlBotones.add(btnFacturaPdf); // Agregamos ambos botones
 
         JPanel pnlIzquierdo = new JPanel(new BorderLayout());
         pnlIzquierdo.add(pnlForm, BorderLayout.CENTER);
@@ -327,37 +329,27 @@ public class PanelTurnos extends JPanel {
     
     }
 
-    private void generarFacturaTurno() {
-    if (idTurnoSeleccionado == null) {
-        JOptionPane.showMessageDialog(
-                this,
-                "Seleccione un turno de la tabla para generar su factura.",
-                "Atención",
-                JOptionPane.WARNING_MESSAGE
-        );
-        return;
-    }
-
-    try {
-        var turnoOpt = controller.buscarTurnoId(idTurnoSeleccionado);
-        if (turnoOpt.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Turno no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+    private void generarFacturaTurno(boolean esPdf) {
+        if (idTurnoSeleccionado == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione un turno de la tabla para generar su factura.", "Atención", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
-        Turno turno = turnoOpt.get();
-        String rutaArchivo = controller.emitirFactura(turno);
-
-        JOptionPane.showMessageDialog(
-                this,
-                "¡Factura generada con éxito!\nGuardada en: " + rutaArchivo,
-                "Factura Emitida",
-                JOptionPane.INFORMATION_MESSAGE
-        );
-    } catch (ClinicaException ex) {
-        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error de Facturación", JOptionPane.WARNING_MESSAGE);
-    } catch (Exception ex) {
-        JOptionPane.showMessageDialog(this, "Error inesperado al generar la factura: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        try {
+            var turnoOpt = controller.buscarTurnoId(idTurnoSeleccionado);
+            if (turnoOpt.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Turno no encontrado.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            Turno turno = turnoOpt.get();
+            
+            // Pasamos la variable booleana al controlador
+            String rutaArchivo = controller.emitirFactura(turno, esPdf);
+            
+            JOptionPane.showMessageDialog(this, "¡Factura generada con éxito!\nGuardada en: " + rutaArchivo, "Factura Emitida", JOptionPane.INFORMATION_MESSAGE);
+        } catch (ClinicaException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error de Facturación", JOptionPane.WARNING_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error inesperado al generar la factura: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
-}
 }

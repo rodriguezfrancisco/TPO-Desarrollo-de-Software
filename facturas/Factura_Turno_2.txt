@@ -3,25 +3,25 @@
                FACTURA / COMPROBANTE                
 ====================================================
 N° Factura / Turno: 2
-Fecha de Emisión:   12/10/2026 11:56:24
-Fecha del Turno:    2026-10-18 08:54
+Fecha de Emisión:   26/10/2026 19:51:12
+Fecha del Turno:    2026-10-27 17:19
 ----------------------------------------------------
 DATOS DEL PACIENTE:
- Nombre:    Vicky Venturini
- DNI:       123
- Teléfono:  098765
- Cobertura: Obra Social: 111 (Afiliado Nº: AF-123)
+ Nombre:    oi j
+ DNI:       oij
+ Teléfono:  o
+ Cobertura: Particular (Sin cobertura de obra social)
 ----------------------------------------------------
 DATOS DEL PROFESIONAL:
- Odontólogo:   Dr/a. Juan Perez
- Matrícula:    555
- Especialidad: EXTRACCION
+ Odontólogo:   Dr/a. iuh iuh
+ Matrícula:    uhi
+ Especialidad: ORTODONCIA
 ----------------------------------------------------
 DETALLE DE LIQUIDACIÓN:
- Consulta y Procedimiento 100% Cubiertos por Obra Social.
- Recargo Especialidad asumido:  $   1000.00
+ Tarifa Base Consulta:          $    100,00
+ Recargo por ORTODONCIA      :  $   1000,00
 ----------------------------------------------------
- TOTAL A ABONAR:                $      0.00
+ TOTAL A ABONAR EN CAJA:        $   1100,00
 ====================================================
           ¡Gracias por confiar en nosotros!         
 ====================================================
