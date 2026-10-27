@@ -8,9 +8,12 @@ public class TercerosPdfGenerator {
     }
     
     public String exportarDocumentoFisico(String nombreArchivoSinExtension, String textoFisico) {
-        String rutaFinal = nombreArchivoSinExtension + ".pdf";
-        // Aquí la librería procesaría internamente los bytes para crear un PDF real
-        System.out.println("Generando archivo binario PDF en: " + rutaFinal);
-        return rutaFinal;
+    String rutaFinal = nombreArchivoSinExtension + ".pdf";
+    try (java.io.BufferedWriter writer = new java.io.BufferedWriter(new java.io.FileWriter(rutaFinal))) {
+        writer.write("--- SIMULACIÓN DE DOCUMENTO PDF ---\n\n" + textoFisico);
+    } catch (java.io.IOException e) {
+        System.err.println("Error al generar el archivo: " + e.getMessage());
     }
+    return rutaFinal;
+}
 }
