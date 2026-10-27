@@ -1,0 +1,46 @@
+====================================================
+        CLÍNICA ODONTOLÓGICA 'SONRISA FELIZ'        
+               FACTURA / COMPROBANTE                
+====================================================
+N° Factura / Turno: 4
+<<<<<<< Updated upstream
+Fecha de Emisión:   13/10/2026 08:18:56
+Fecha del Turno:    2026-10-14 08:17:14.692
+----------------------------------------------------
+DATOS DEL PACIENTE:
+ Nombre:    Vicky Venturini
+ DNI:       123
+ Teléfono:  098765
+ Cobertura: Obra Social: 111 (Afiliado Nº: AF-123)
+----------------------------------------------------
+DATOS DEL PROFESIONAL:
+ Odontólogo:   Dr/a. Marta Gonzalez
+ Matrícula:    432
+=======
+Fecha de Emisión:   26/10/2026 20:00:46
+Fecha del Turno:    2026-10-29 15:20:02.400
+----------------------------------------------------
+DATOS DEL PACIENTE:
+ Nombre:    Marta Gonzalez
+ DNI:       123321
+ Teléfono:  2255113
+ Cobertura: Obra Social: osde (Afiliado Nº: AF-123321)
+----------------------------------------------------
+DATOS DEL PROFESIONAL:
+ Odontólogo:   Dr/a. Jimena Baron
+ Matrícula:    A123ABC
+>>>>>>> Stashed changes
+ Especialidad: ORTODONCIA
+----------------------------------------------------
+DETALLE DE LIQUIDACIÓN:
+ Consulta y Procedimiento 100% Cubiertos por Obra Social.
+<<<<<<< Updated upstream
+ Recargo Especialidad asumido:  $    800.00
+=======
+ Recargo Especialidad asumido:  $    500.00
+>>>>>>> Stashed changes
+----------------------------------------------------
+ TOTAL A ABONAR:                $      0.00
+====================================================
+          ¡Gracias por confiar en nosotros!         
+====================================================

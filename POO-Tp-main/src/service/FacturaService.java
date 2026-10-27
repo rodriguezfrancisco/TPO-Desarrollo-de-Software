@@ -4,11 +4,11 @@ import entity.Factura;
 import entity.Odontologo;
 import entity.Paciente;
 import entity.Turno;
+import java.time.LocalDateTime;
 import repository.FacturaFileStorage;
 import repository.FacturaRepository;
 import repository.IFacturaStorage;
 import repository.IRepository;
-import java.time.LocalDateTime;
 
 public class FacturaService extends BaseService<Factura> implements IFacturaService {
     private IFacturaStorage facturaStorage;
@@ -20,9 +20,6 @@ public class FacturaService extends BaseService<Factura> implements IFacturaServ
         this.facturaStorage = facturaStorage;
         this.formatter = formatter;
     }
-
-
-
 
     // Constructor de conveniencia manteniendo compatibilidad
     public FacturaService() {

@@ -2,11 +2,10 @@ package gui;
 
 import controller.*;
 import entity.*;
+import java.awt.*;
+import javax.swing.*;
 import repository.*;
 import service.*;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class VentanaPrincipal extends JFrame {
     
@@ -30,12 +29,8 @@ public class VentanaPrincipal extends JFrame {
         PacienteService pacienteService = new PacienteService(pacienteRepo);
         OdontologoService odontologoService = new OdontologoService(odontologoRepo);
         
-       // Creamos la nueva estrategia de almacenamiento usando el Adapter
-        IFacturaStorage almacenamientoPdf = new FacturaPdfAdapter("facturas");
-        
-        // Inyectamos el repositorio, el nuevo adaptador PDF y el formateador base
-        IFacturaService facturaService = new FacturaService(facturaRepo, almacenamientoPdf, new FacturaComprobanteFormatter());
-        
+        // Usamos las interfaces abstractas para inyectar en los controladores
+        FacturaService facturaService = new FacturaService();
         IService<Turno> turnoService = new TurnoService(turnoRepo, pacienteService, odontologoService);
 
         // 3. CAPA DE CONTROL
